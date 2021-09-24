@@ -1,0 +1,17 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|children|seconds|warnings|error
+Recipe_url|stem|07bdc7f3fd27ed31|68903fe4d19da187|ef46db3751d8e999|741281539|https://raw.githubusercontent.com/greeny/SatisfactoryTools/dev/data/data.json|t18890.6026153697s||0|url|vector|||0||
+RecipeData|stem|01bc51c8b8efbe7e|0bdb6799a0111469|de281996f997b27d|1295487169||t18893.9736990104s|6249b3c347b5e379|21553|rds|vector|||0.31||
+RecipeGraphs|stem|7f41a33a00bfc04b|de15b6f23d56f1b3|f0e9d59c36d26e1b|395938503||t18893.9736991374s|24b89c74b79764e6|5038|rds|vector|||0||
+RecipeSubsets|stem|7675c80b59ca7a4a|b7b8d9019a5bf1e2|0c09d61148d042de|-1004260228||t18893.9736992528s|3bd8f66805fd112b|45|rds|vector|||0||
+available_resources|stem|71c3c9063bbded4b|c84b61c1c1c28e8e|d5952a468c1d9178|-1802490998||t18894.0899369374s|3ffee416faaef59c|178|rds|vector|||0||
+Opt_recipes|stem|49ecad5ab9ada6ee|f645f049203dbafc|a3dad144c40657ed|1989588246||t18894.0899406264s|187ee8347e2bb00a|84|rds|vector|||0||
+Opt_products|stem|5bac1edad4d24de8|1e3a8f89d65a05fb|a3dad144c40657ed|-308485042||t18894.0929688679s|383bd5e2f277cce6|122|rds|vector|||0||
+LP_result|stem|37e40232b522256d|6ff89303139b88f8|042d3d72e942732e|1543733493||t18894.1080888252s|b899c953080ac3fb|6772|rds|vector|||59.08||
+make_recipe_subsets|function|5a10752ad39b2bc2||||||||||||||
+get_recipe_data|function|d64a422b63a23e82||||||||||||||
+make_recipeMatrix|function|36ba5958d18d94ba||||||||||||||
+make_recipe_graphs|function|5fc4ec12fad0cd80||||||||||||||
+.pbd_env|object|ef744cb3f9e09a08||||||||||||||
+clean_lp_results|function|5cac20fbfcc79288||||||||||||||
+recipe_lp_solutions|function|94af1100c2c583b2||||||||||||||
+CytoscapeReady|stem|a2342cb8311fb548|0a925e5b197fa163|f5d31123a54222e0|-2041118127||t18894.1237879756s|afd491fa8b5810ba|1245|rds|vector|||0.14||
