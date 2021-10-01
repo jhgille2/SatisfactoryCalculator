@@ -1,27 +1,14 @@
-#' .. content for \description{} (no empty lines) ..
-#'
-#' .. content for \details{} ..
-#'
-#' @title
-#' @param startingResources
-#' @param products
-#' @param product_longnames
-#' @param recipeData
-#' @param recipeGraph
-#' @param integerFactories
-recipe_lp_grid_solutions <- function(startingResources = available_resources,
-                                products = Opt_products, product_longnames =
-                                  Opt_recipes, recipeData =
-                                  RecipeData$NoAlternates, recipeGraph =
-                                  RecipeGraphs$NoAlternates, integerFactories =
-                                  TRUE, 
-                                gridsize = 10, 
-                                reqAmt = NULL) {
+recipe_lp_base <- function(startingResources = available_resources,
+                           products = Opt_products, product_longnames =
+                             Opt_recipes, recipeData =
+                             RecipeData$NoAlternates, recipeGraph =
+                             RecipeGraphs$NoAlternates, integerFactories =
+                             TRUE) {
   
   recipeMatrix <- make_recipeMatrix(product_longnames, recipeGraph, recipeData)
   
   # Constraint direction and right hand side for the linear program
-  const_dir <- rep(">=", nrow(recipeMatrix))
+  const_dir <- rep(">", nrow(recipeMatrix))
   rhs       <- rep(0, nrow(recipeMatrix))
   
   # Set bounds for raw resource consumption
@@ -37,61 +24,72 @@ recipe_lp_grid_solutions <- function(startingResources = available_resources,
   }
   
   # Set minimum production rates for products
-  for(i in 1:length(products)){
-    
-    currentRes            <- which(rownames(recipeMatrix) ==  names(products)[[i]])
-    const_dir[currentRes] <- ">"
-    rhs[currentRes]       <- products[[i]]
-    
-  }
+  const_dir[match(names(products), rownames(recipeMatrix))] <- ">"
+  rhs[match(names(products), rownames(recipeMatrix))] <- products
+  # for(i in 1:length(products)){
+  #   
+  #   currentRes            <- which(rownames(recipeMatrix) ==  names(products)[[i]])
+  #   const_dir[currentRes] <- ">"
+  #   rhs[currentRes]       <- products[[i]]
+  #   
+  # }
   
   rhs <- as.numeric(rhs)
   
-  # This next part is pretty slow if there are 
-  # lots of objectives but for the time being it kinda works
-  #
-  # One easy improvement here is to remove any duplicated ratios between the
-  # objective weights or use an otherwise more intellegent grid of objectives
-  # Maybe look into the design functions that the dials package uses,
-  # maybe the lhs package too?
-  #
-  # ex. optimimLHS(length(product_longnames), nObjectives)
-  # where nObjectives is just some set number of objective function weights to try
+  objective_indices <- match(product_longnames, colnames(recipeMatrix))
+  #obj_coefs <- recipeRates/reqAmt
   
   
-  # A strategy to fit many linear models with different objective functions
-  # to weigh products differently
-  # objective_vars <- vector("list", length = length(product_longnames))
-  # for(i in 1:length(objective_vars)){
-  #   objective_vars[[i]] <- seq(0.1, 1, 0.1)
-  # }
-  # 
-  # names(objective_vars) <- product_longnames
-  # 
-  # objectiveGrid <- cross_df(objective_vars) %>%
-  #   t()
+  objectiveVec <- rep(0, ncol(recipeMatrix))
+  objectiveVec[objective_indices] <- 1
   
-  # Latin hypercube sampling for objective (number of factory) weights
-  objectiveGrid           <- lhs::optimumLHS(n = length(product_longnames), gridsize)
-  rownames(objectiveGrid) <- product_longnames 
+  lp_soln <- lp(direction    = "max", 
+                objective.in = objectiveVec, 
+                const.mat    = recipeMatrix, 
+                const.dir    = const_dir, 
+                const.rhs    = rhs, 
+                all.int      = integerFactories)
   
-  objective_indices <- match(rownames(objectiveGrid), colnames(recipeMatrix))
-  objective_list    <- vector("list", length = ncol(objectiveGrid))
-  obj_size          <- ncol(recipeMatrix)
-  for(i in 1:length(objective_list)){
-    
-    currentVec <- rep(0, obj_size)
-    currentVec[objective_indices] <- objectiveGrid[, i]
-    
-    objective_list[[i]] <- currentVec
+  return(lp_soln)
+}
+
+recipe_lp_rate_grid <- function(startingResources = available_resources,
+                                products = Opt_products, product_longnames =
+                                  Opt_recipes, recipeData =
+                                  RecipeData$NoAlternates, recipeGraph =
+                                  RecipeGraphs$NoAlternates, integerFactories =
+                                  TRUE, 
+                                  reqAmt = NULL, 
+                                gridsize = 25){
+  
+
+
+  ratevec <- vector("list", length  = length(products))
+  names(ratevec) <- names(products)
+  for(i in 1:length(ratevec)){
+    ratevec[[i]] <- seq(1, products[[i]], length.out = gridsize)
   }
   
-  all_lps <- pblapply(objective_list, function(x) lp(direction    = "max", 
-                                                     objective.in = x, 
-                                                     const.mat    = recipeMatrix, 
-                                                     const.dir    = const_dir, 
-                                                     const.rhs    = rhs, 
-                                                     all.int      = integerFactories))
+  rates_crossed <- cross_df(ratevec) %>% t()
+  
+  rate_args <- vector("list", length = ncol(rates_crossed))
+  for(i in 1:length(rate_args)){
+    rate_args[[i]] <- rates_crossed[, i]
+  }
+  
+  
+  nWorkers <- ceiling(parallel::detectCores() *0.75)
+  plan(multisession, workers = nWorkers, gc = TRUE)
+  
+  all_lps <- future_map(rate_args, function(x) recipe_lp_base(products          = x, 
+                                                              startingResources = startingResources, 
+                                                              product_longnames = product_longnames, 
+                                                              recipeData        = recipeData, 
+                                                              recipeGraph       = recipeGraph, 
+                                                              integerFactories  = integerFactories), 
+                        .progress = TRUE)
+  
+  recipeMatrix <- make_recipeMatrix(product_longnames, recipeGraph, recipeData)
   
   # functions to get just the objectives set for the desired components
   clean_objective <- function(x, recipeMatrix, outputobjectives){
@@ -150,7 +148,7 @@ recipe_lp_grid_solutions <- function(startingResources = available_resources,
     # Get the production rates from the production_rates dataframe
     current_rates <- production_rate$rate[match(names(product_names), production_rate$ingredient)]
     
-    total_time <- (objective_amount/current_rates) %>% sum()
+    total_time <- (objective_amount/current_rates) %>% max()
     
     return(total_time)
   }
@@ -171,4 +169,6 @@ recipe_lp_grid_solutions <- function(startingResources = available_resources,
   }
   
   return(lp_data)
+  
+  return(all_lps)
 }

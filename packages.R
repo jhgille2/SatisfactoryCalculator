@@ -15,6 +15,8 @@ pacman::p_load(conflicted,
                magrittr, 
                pbapply, 
                lpSolve, 
-               lhs)
+               lhs, 
+               furrr, 
+               job)
 
 conflict_prefer("filter", "dplyr")

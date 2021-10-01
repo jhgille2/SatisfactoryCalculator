@@ -9,7 +9,7 @@
 #' @param recipeData
 #' @param recipeGraph
 #' @param integerFactories
-recipe_lp_grid_solutions <- function(startingResources = available_resources,
+recipe_lp_solutions_parallel <- function(startingResources = available_resources,
                                 products = Opt_products, product_longnames =
                                   Opt_recipes, recipeData =
                                   RecipeData$NoAlternates, recipeGraph =
@@ -86,12 +86,17 @@ recipe_lp_grid_solutions <- function(startingResources = available_resources,
     objective_list[[i]] <- currentVec
   }
   
-  all_lps <- pblapply(objective_list, function(x) lp(direction    = "max", 
+  nWorkers <- ceiling(parallel::detectCores() *0.5)
+  
+  plan(multisession, workers = nWorkers, gc = TRUE)
+  
+  all_lps <- future_map(objective_list, function(x) lp(direction    = "max", 
                                                      objective.in = x, 
                                                      const.mat    = recipeMatrix, 
                                                      const.dir    = const_dir, 
                                                      const.rhs    = rhs, 
-                                                     all.int      = integerFactories))
+                                                     all.int      = integerFactories), 
+                        .progress = TRUE)
   
   # functions to get just the objectives set for the desired components
   clean_objective <- function(x, recipeMatrix, outputobjectives){
@@ -128,8 +133,7 @@ recipe_lp_grid_solutions <- function(startingResources = available_resources,
     recipeMatrix %*% lp$solution %>% 
       as.data.frame() %>% 
       rownames_to_column() %>% 
-      set_names(c("ingredient", "rate")) %>% 
-      mutate(rate = round(rate, 3))
+      set_names(c("ingredient", "rate"))
   }
   
   # The standard production rate for each item in the matrix

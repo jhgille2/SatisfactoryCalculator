@@ -1,4 +1,6 @@
 
+computer_matrix <- make_recipeMatrix(computer_items, recipeGraph = RecipeGraphs$NoAlternates, recipeData = RecipeData$NoAlternates)
+
 recipeCounts <- RecipeData$NoAlternates %>% 
   select(name, product_item) %>% 
   group_by(name) %>% 
@@ -7,66 +9,52 @@ recipeCounts <- RecipeData$NoAlternates %>%
 
 onerecipeitems <- filter(RecipeData$NoAlternates, name %in% recipeCounts$name)
 
-RecipeData$NoAlternates %>% 
+itemNameConversion <- RecipeData$NoAlternates %>% 
   filter(product_item %in% onerecipeitems$product_item) %>% 
-  select(product_item, name, product_per_minute, producedIn) %>% 
-  unique() %>% 
-  rename(longname = name) -> itemNameConversion
+  select(product_item, slug, product_per_minute, producedIn) %>% 
+  unique()
 
 madeIn <- itemNameConversion %>% 
-  select(longname, producedIn)
+  select(product_item, producedIn)
 
-slug_conversion <- RecipeData$NoAlternates %>% 
-  select(slug, ingredient_item, name) %>% 
-  distinct()
+itemConsumptionMatrix <- t(computer_matrix) * soln_computer_int$solution[[1]]
 
-
-itemConsumptionMatrix <- t(make_recipeMatrix(computer_items, recipeGraph = RecipeGraphs$NoAlternates, recipeData = RecipeData$NoAlternates)) * soln_computer_int$solution[[1]]
-
-itemnetwork_df <- itemConsumptionMatrix %>%
+item_df <- itemConsumptionMatrix %>%
   as.data.frame() %>% 
   rownames_to_column() %>% 
   pivot_longer(cols = 2:ncol(.)) %>% 
-  filter(value != 0) %>% 
-  relocate(name) %>%
-  rename(ingredient_item = name, 
-         slug            = rowname)
+  rename(recipe = rowname, item = name) %>% 
+  filter(value != 0) %>%
+  mutate(direction = ifelse(value < 0, "ingredient", "product")) 
 
-nameConversion <- RecipeData$NoAlternates %>% 
-  filter(product_item %in% test$name) %>% 
-  select(product_item, name) %>%
-  rename(longname = product_item, shortname = name) %>% 
+ingredient_df <- item_df %>% filter(direction == "ingredient") %>% 
+  rename(ingredient_item = item, 
+         ingredient_amt = value) %>% 
+  select(-direction)
+
+product_df    <- item_df  %>% filter(direction == "product") %>% 
+  rename(product_item = item, 
+         product_amt  = value) %>% 
+  select(- direction)
+
+recipe_data <- RecipeData$NoAlternates %>% 
+  select(ingredient_item, product_item, slug, product_per_minute) %>% 
   distinct()
 
-itemnetwork_df <- inner_join(itemnetwork_df, slug_conversion) %>% 
-  mutate(to = dplyr::coalesce(name, slug)) %>% 
-  select(-name) %>% 
-  left_join(itemNameConversion, by = c("ingredient_item" = "product_item")) %>% 
-  mutate(from = dplyr::coalesce(longname, ingredient_item)) %>% 
-  select(from, to, value, product_per_minute) %>% 
-  mutate(value          = abs(value),
-         nFactories     = ceiling(value/product_per_minute), 
-         productionrate = ifelse(is.na(nFactories), value, paste0(value, " (", nFactories, " factories)"))) %>% 
-  rename(flow = value)
+all_ingredients <- left_join(ingredient_df, product_df, by = "recipe") %>% 
+  rename(from = ingredient_item, to = product_item) %>% 
+  select(from, to, recipe, ingredient_amt, product_amt) %>% 
+  mutate(ingredient_amt = -1*ingredient_amt) %>% 
+  left_join(recipe_data, by = c("recipe" = "slug", "from" = "ingredient_item", "to" = "product_item")) %>% 
+  mutate(nFactories     = ceiling(product_amt/product_per_minute), 
+         productionrate = ifelse(is.na(nFactories), ingredient_amt, paste0(ingredient_amt, " (", nFactories, " factories)"))) %>% 
+  rename(flow = ingredient_amt)
 
+vertexData <- tibble(product_item = unlist(select(all_ingredients, from, to)) %>% unique()) %>% 
+  left_join(madeIn) %>% 
+  distinct()
 
-# %>% 
-#   left_join(itemNameConversion, by = c("name" = "product_item")) %>% 
-#   mutate(from           = dplyr::coalesce(longname, name),
-#          value          = abs(value),
-#          nFactories     = ceiling(value/product_per_minute), 
-#          productionrate = ifelse(is.na(nFactories), value, paste0(value, " (", nFactories, " factories)"))) %>% 
-#   select(from, rowname, value, nFactories, productionrate) %>% 
-#   inner_join(slug_conversion, by = c("rowname" = "slug")) %>%
-#   select(from, name, value, nFactories, productionrate) %>%
-#   rename(to   = name, 
-#          flow = value) %>% 
-#   filter(from != to)
-
-vertexData <- tibble(longname = unlist(select(itemnetwork_df, from, to)) %>% unique()) %>% 
-  left_join(madeIn)
-
-itemnetwork_igraph <- graph_from_data_frame(itemnetwork_df, vertices = vertexData)
+itemnetwork_igraph <- graph_from_data_frame(all_ingredients, vertices = vertexData)
 
 createNetworkFromIgraph(itemnetwork_igraph)
 
