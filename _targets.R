@@ -26,13 +26,25 @@ tar_plan(
   ## Section: Factory optimization
   ##################################################
   
+  # This just solves a grid of linear programs that is made from requiring
+  # different minimum production rates for the products in the lp formulation. 
+  # After that, I just calculate some summary stats for each viable solution and
+  # choose the one that I like the most, right now this is normally the factory
+  # that can archive some large milestone the fastest with a given set of 
+  # input resources
+  #
+  # TODO: Look into global solvers that work well with linear constraints, I think
+  # that'd be more appropriate (and efficient) for the kind of problem I'm trying to solve here. 
+  # .... or find some way to rearrange my data so that I can optimize time/efficiency
+  # instead of rates/factory counts.
+  
   # Set the items to produce (recipe names for the objective function)
   tar_target(Opt_recipes, 
              c("modular-engine",
                "adaptive-control-unit", 
                "supercomputer")), 
   
-  # And ingredient names with maximum desired production rates, used to make a crossed grid of 
+  # And component names with maximum desired production rates, used to make a crossed grid of 
   # minimum production rates for each products to feed into the lp solver.
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
@@ -59,7 +71,7 @@ tar_plan(
                                  product_longnames = Opt_recipes, 
                                  recipeData        = RecipeData$NoAlternates, 
                                  recipeGraph       = RecipeGraphs$NoAlternates, 
-                                 integerFactories  = FALSE,             # Basically, do you want to underclock the last factory for an item or not
+                                 integerFactories  = FALSE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
                                  reqAmt            = c(500, 100, 100),  # How many of each product are required for the objective
                                  gridsize          = 50)),              # How many production rate minima to give to the solver...important to 
                                                                         # remember that the solver will run gridsize^length(Opt_products) times
