@@ -35,8 +35,15 @@ tar_plan(
   #
   # TODO: Look into global solvers that work well with linear constraints, I think
   # that'd be more appropriate (and efficient) for the kind of problem I'm trying to solve here. 
-  # .... or find some way to rearrange my data so that I can optimize time/efficiency
-  # instead of rates/factory counts.
+  # Basically, the problem right now is the optimization is "detached" from my actual 
+  # objectives. What is being optimized is the net item production rates  after constraints
+  # are put on different minimum net rates of some objective items. Really what I'm 
+  # trying to optimize is the time to complete an objective which requires some set of 
+  # objective items. As it stands right now, my strategy essentially performs an 
+  # (unoptimized) grid search of the (mostly) feasible region of factories, and then I choose
+  # the solution which happens to have the fastest time to complete the objective. 
+  # It would be good to instead take an approach that optimizes this time
+  # in a more efficient and directed manner. 
   
   # Set the items to produce (recipe names for the objective function)
   tar_target(Opt_recipes, 
