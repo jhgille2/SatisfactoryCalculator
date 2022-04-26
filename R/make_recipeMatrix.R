@@ -58,17 +58,18 @@ make_recipeMatrix <- function(itemVector, recipeGraph, recipeData) {
   # and each ingredient is a row and values in the matrix are negative
   # if a recipe consumes an ingredient and positive if the recipe produces it
   Ingredients <- ego_df %>% 
-    filter(slug != "uranium-pellet") %>% # I'm not sure what's up with this recipe so I'm just removing it for now
+    #filter(slug != "uranium-pellet") %>% # I'm not sure what's up with this recipe so I'm just removing it for now
     select(slug, from, ingredient_per_minute) %>% 
     mutate(ingredient_per_minute = -1*ingredient_per_minute) %>% 
     rename(component = from, 
            component_rate = ingredient_per_minute)
   
   Products <- ego_df %>% 
-    filter(slug != "uranium-pellet") %>% # Removing uranium pellets for now cause the recipe is annoying and I wont be making them for a while
+    #filter(slug != "uranium-pellet") %>% # Removing uranium pellets for now cause the recipe is annoying and I wont be making them for a while
     select(slug, to, product_per_minute) %>% 
     rename(component = to, 
-           component_rate = product_per_minute)
+           component_rate = product_per_minute) %>%
+    filter(!is.na(component_rate))
   
   recipeMatrix <- bind_rows(Ingredients, Products) %>% 
     distinct() %>% 

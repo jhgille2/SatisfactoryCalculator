@@ -17,6 +17,12 @@ pacman::p_load(conflicted,
                lpSolve, 
                lhs, 
                furrr, 
-               job)
+               job,
+               here)
 
 conflict_prefer("filter", "dplyr")
+
+c("Alternate: Recycled Plastic", 
+  "Residual Plastic", 
+  "Alternate: Recycled Rubber", 
+  "Residual Rubber")

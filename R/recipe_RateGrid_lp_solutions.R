@@ -78,7 +78,7 @@ recipe_lp_rate_grid <- function(startingResources = available_resources,
   }
   
   
-  nWorkers <- ceiling(parallel::detectCores() *0.75)
+  nWorkers <- ceiling(parallel::detectCores() *0.5)
   plan(multisession, workers = nWorkers, gc = TRUE)
   
   all_lps <- future_map(rate_args, function(x) recipe_lp_base(products          = x, 

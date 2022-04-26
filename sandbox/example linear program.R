@@ -1,17 +1,12 @@
 tar_load(RecipeData)
 tar_load(RecipeGraphs)
 
-crystal_items <- c("crystal-oscillator", 
-                   "heavy-modular-frame")
+crystal_items <- c("versatile-framework")
 
-crystal_products <- c("Desc_CrystalOscillator_C" = 1, 
-                      "Desc_ModularFrameHeavy_C" = 1)
+crystal_products <- c("Desc_SpaceElevatorPart_2_C" = 1)
 
-startingResources_crystal = c("Desc_OreCopper_C" = -240, 
-                              "Desc_OreIron_C"   = -700, 
-                              "Desc_Coal_C"      = -350, 
-                              "Desc_Stone_C"     = -240, 
-                              "Desc_RawQuartz_C" = -240)
+startingResources_crystal = c("Desc_OreIron_C"   = -240, 
+                              "Desc_Coal_C"      = -120)
 
 soln_crystal <- recipe_lp_solutions(startingResources = startingResources_crystal, 
                             products          = crystal_products, 
@@ -30,19 +25,12 @@ soln_crystal_int <- recipe_lp_solutions(startingResources = startingResources_cr
 
 
 # Elevator tier 3 - removed versatile framework since I had leftover production from the previous space elevator milestone
-tier3_items <- c("modular-engine",
-                 "adaptive-control-unit")
+tier3_items <- c("versatile-framework")
 
-tier3_products <- c("Desc_SpaceElevatorPart_4_C" = 50,
-                    "Desc_SpaceElevatorPart_5_C" = 50)
+tier3_products <- c("Desc_SpaceElevatorPart_2_C" = 20)
 
-startingResources_tier3 = c("Desc_OreCopper_C" = -1380, 
-                            "Desc_OreIron_C"   = -3960, 
-                            "Desc_Coal_C"      = -1560, 
-                            "Desc_Stone_C"     = -2640, 
-                            "Desc_RawQuartz_C" = -480, 
-                            "Desc_LiquidOil_C" = -1740, 
-                            "Desc_Water_C"     = -2000)
+startingResources_tier3 = c("Desc_OreIron_C"   = -360, 
+                            "Desc_Coal_C"      = -180)
 
 
 soln_tier3_rategrid <- recipe_lp_rate_grid(startingResources = startingResources_tier3,
@@ -51,10 +39,17 @@ soln_tier3_rategrid <- recipe_lp_rate_grid(startingResources = startingResources
                                            recipeData        = RecipeData$NoAlternates, 
                                            recipeGraph       = RecipeGraphs$NoAlternates, 
                                            integerFactories  = FALSE, 
-                                           reqAmt            = c(500, 100), 
+                                           reqAmt            = 500, 
                                            gridsize          = 100)
 
-# Use the rate grid function to "optimize" rate to objective
+tier_3_cytoscape <- clean_lp_results(lp_table    = soln_tier3_rategrid, 
+                                     recipeData  = RecipeData$NoAlternates, 
+                                     recipeGraph = RecipeGraphs$NoAlternates, 
+                                     products    = tier3_items)
+
+createNetworkFromIgraph(tier_3_cytoscape)
+
+soln# Use the rate grid function to "optimize" rate to objective
 tier3_products_byrate <- c("Desc_SpaceElevatorPart_4_C" = 50,
                            "Desc_SpaceElevatorPart_5_C" = 50)
 
