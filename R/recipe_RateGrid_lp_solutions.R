@@ -5,9 +5,12 @@ recipe_lp_base <- function(startingResources = available_resources,
                              RecipeGraphs$NoAlternates, integerFactories =
                              TRUE) {
   
+  # Make a matrix of consumption/production rates. Recipes as columns, 
+  # components in rows
   recipeMatrix <- make_recipeMatrix(product_longnames, recipeGraph, recipeData)
   
   # Constraint direction and right hand side for the linear program
+  # Basically, make sure that there is no negative net flow in a solution
   const_dir <- rep(">", nrow(recipeMatrix))
   rhs       <- rep(0, nrow(recipeMatrix))
   
@@ -19,6 +22,8 @@ recipe_lp_base <- function(startingResources = available_resources,
     
   }
   
+  # Insist that net flow of heavy oil residue must equal zero
+  # (it's practically useless (?))
   if("Desc_HeavyOilResidue_C" %in% rownames(recipeMatrix)){
     const_dir[which(rownames(recipeMatrix) == "Desc_HeavyOilResidue_C")] <- "="
   }
@@ -26,20 +31,14 @@ recipe_lp_base <- function(startingResources = available_resources,
   # Set minimum production rates for products
   const_dir[match(names(products), rownames(recipeMatrix))] <- ">"
   rhs[match(names(products), rownames(recipeMatrix))] <- products
-  # for(i in 1:length(products)){
-  #   
-  #   currentRes            <- which(rownames(recipeMatrix) ==  names(products)[[i]])
-  #   const_dir[currentRes] <- ">"
-  #   rhs[currentRes]       <- products[[i]]
-  #   
-  # }
-  
   rhs <- as.numeric(rhs)
   
+  # The indices of the objective products in the column names of the matrix
   objective_indices <- match(product_longnames, colnames(recipeMatrix))
-  #obj_coefs <- recipeRates/reqAmt
-  
-  
+
+  ##### THIS NEEDS A LOT OF WORK #####
+  # A (dumb) objective function with coefficients of 1 for each 
+  # desired product and 0 for everything else. 
   objectiveVec <- rep(0, ncol(recipeMatrix))
   objectiveVec[objective_indices] <- 1
   
@@ -53,6 +52,9 @@ recipe_lp_base <- function(startingResources = available_resources,
   return(lp_soln)
 }
 
+# This function solves a grid of linear programs where the grid is defined by
+# different combinations of minimum constraints for the desired product
+# components
 recipe_lp_rate_grid <- function(startingResources = available_resources,
                                 products = Opt_products, product_longnames =
                                   Opt_recipes, recipeData =
@@ -64,10 +66,13 @@ recipe_lp_rate_grid <- function(startingResources = available_resources,
   
 
 
+  # Make a crossed grid of minimal production rates. 
+  # Also, maybe look into other options for different
+  # types of grids e.g. space filling, latin hypercube
   ratevec <- vector("list", length  = length(products))
   names(ratevec) <- names(products)
   for(i in 1:length(ratevec)){
-    ratevec[[i]] <- seq(1, products[[i]], length.out = gridsize)
+    ratevec[[i]] <- seq(0.1, products[[i]], length.out = gridsize)
   }
   
   rates_crossed <- cross_df(ratevec) %>% t()
