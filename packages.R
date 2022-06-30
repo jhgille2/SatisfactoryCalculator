@@ -4,11 +4,13 @@ if(!require(pacman)){
 }
 
 # Use pacman to load/install packaged
-pacman::p_load(conflicted, 
+pacman::p_load(dplyr, 
+               stringr,
+               tidyr,
+               conflicted, 
                dotenv, 
                targets, 
                tarchetypes, 
-               tidyverse, 
                jsonlite, 
                RCy3, 
                igraph, 
@@ -18,11 +20,9 @@ pacman::p_load(conflicted,
                lhs, 
                furrr, 
                job,
-               here)
+               here, 
+               purrr, 
+               tibble)
 
 conflict_prefer("filter", "dplyr")
 
-c("Alternate: Recycled Plastic", 
-  "Residual Plastic", 
-  "Alternate: Recycled Rubber", 
-  "Residual Rubber")

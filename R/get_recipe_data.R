@@ -44,7 +44,7 @@ get_recipe_data <- function(url = Recipe_url) {
   
   # Grab the ingredient tibbles and merge them all
   all_ingredients <- map(AllRecipes, pluck("ingredient_table") ) %>%
-    reduce(bind_rows)
+    purrr::reduce(dplyr::bind_rows)
   
   # Clean up the nested ingredient table and bind this back to the 
   # starting ingredient data
@@ -53,7 +53,7 @@ get_recipe_data <- function(url = Recipe_url) {
 
   all_ingredients %<>%
     select(-ingredients) %>% 
-    bind_cols(ingredient_df)
+    dplyr::bind_cols(ingredient_df)
   
   # And do the same for the products
   all_products <- map(AllRecipes, pluck("product_table") ) %>%
@@ -64,7 +64,7 @@ get_recipe_data <- function(url = Recipe_url) {
   
   all_products %<>%
     select(-products) %>%
-    bind_cols(product_df)
+    dplyr::bind_cols(product_df)
   
   
   # Merge the ingredient and product tibbles and add columns for 
@@ -94,7 +94,7 @@ get_recipe_data <- function(url = Recipe_url) {
   # And add these fixed recipes back to the full recipe list
   Recipe_Edgelist_Clean %<>% 
     filter(!(slug %in% problem_recipes$slug & product_item %in% problem_recipes$product_item)) %>%
-    bind_rows(problem_recipes)
+    dplyr::bind_rows(problem_recipes)
   
   # Recipe_Edgelist <- AllRecipes %>% 
   #   select(ingredients, products, name, slug, producedIn, time)

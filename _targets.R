@@ -50,7 +50,15 @@ tar_plan(
   # It would be good to instead take an approach that optimizes this time
   # in a more efficient and directed manner. 
   
-  # Set the items to produce (recipe names for the objective function)
+  
+  # Set the items to produce (recipe names for the objective function).
+  # This can also be improved in the long run by instead getting the names 
+  # of recipes from the component names so that alternate recipes can be more
+  # easily accomodated. 
+  # I think this can be done relatively easily by adjustting the makea_recipematrix function
+  # so that it builds the recipe matrix from the product names instead of the recipe names
+  # and then the recipes which produce the products can be found with the sign
+  # of the coefficient for the product row.
   tar_target(Opt_recipes, 
              c("modular-engine",
                "adaptive-control-unit", 
