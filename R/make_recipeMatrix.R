@@ -10,7 +10,7 @@ make_recipeMatrix <- function(itemVector, recipeGraph, recipeData) {
 
   # Find the item names for the clean names in the item vector
   unique_products <- recipeData %>% 
-    filter(slug %in% itemVector) %>% 
+    dplyr::filter(slug %in% itemVector) %>% 
     select(product_item) %>% 
     unlist() %>% 
     as.character() %>% 
@@ -69,7 +69,7 @@ make_recipeMatrix <- function(itemVector, recipeGraph, recipeData) {
     select(slug, to, product_per_minute) %>% 
     rename(component = to, 
            component_rate = product_per_minute) %>%
-    filter(!is.na(component_rate))
+    dplyr::filter(!is.na(component_rate))
   
   recipeMatrix <- bind_rows(Ingredients, Products) %>% 
     distinct() %>% 
