@@ -52,12 +52,55 @@ I used colors to indicate what building makes each product. In the diagram above
 
 In satisfactory, the limiting factor for production is not the resources themselves as they can be infinitely mines, but rather the rate at which a particular raw resource is being extracted, and subsequently made available for consumption. As a simple example, consider a single normal iron ore node is available. With a tier 1 miner, this node will produce 60 iron ore per minute. The question now becomes what proportion of that rate should be committed to producing iron rods, and how much should go towards the plates?
 
-Ultimately, there isn't an actual answer to this question. Both items are needed, so as long as you are making more than 0 of each product, you'll eventually meet the milestone. However, I think a good objective here first would be to produce an amount of plates and/or rods that consumes all the currently available iron ore rate. To do this, you first have to know the rates at which items are consumed to produce products. In this case:
+Ultimately, there isn't an actual answer to this question. Both items are needed, so as long as you are making more than 0 of each product, you'll eventually meet the milestone. However, I think a good objective here first would be to produce an amount of plates and/or rods that consumes all the currently available iron ore rate without having to under clock any factories. To do this, you first have to know the rates at which items are consumed to produce products. In this case:
 
 $30\ Iron\ ore = 30\ Iron\ ingot$  
 $30\ Iron\ ingot = 20\ Iron\ plate$  
 $15\ Iron\ ingot = 15\ Iron\ rod$  
 
-Put in other words, for each iron ore/min, you can produce 1 ingot/min. You can also produce 1 iron rod/min for every ingot/min. However, you can only produce iron plates at 2/3 the rate that ingots are supplied.
+Put in other words, for each iron ore/min, you can produce 1 ingot/min. You can also produce 1 iron rod/min for every ingot/min. However, you can only produce iron plates at 2/3 the rate that ingots are supplied. In this case, you really only have to worry about the rates that just the iron plate and iron rod recipes consume ingots since ore is converted to ingots at a 1:1 ratio. 
+
+This example is pretty straightforward, if you don't want to under clock you can either maximize iron plates and build two factories (2x30 = 60), maximize iron rods and build four factories (4x15 = 60), or produce both and make 1 plate factory and two rod factories [(1x30) + (2x15) = 60].
+
+This example is pretty trivial, but how about when things get a bit spicier? The first headache-inducing production tree I ran into was when I needed to make both reinforced iron plates and rotors at the same time.
+
+```{r, rplate_rotor_Diagram, echo = FALSE}
+grViz("
+digraph a_nice_graph {
+
+# node definitions with substituted label text
+node [fontname = Helvetica]
+a [label = '@@1']
+b [label = '@@2']
+c [label = '@@3']
+d [label = '@@4']
+e [label = '@@5']
+f [label = '@@6']
+g [label = '@@7']
 
 
+# edge definitions with the node IDs
+a -> b [color = Red]
+b -> c [color = Blue]
+b -> d [color = Blue]
+d -> f [color = Green]
+c -> e [color = Blue]
+e -> f [color = Green]
+c -> g [color = Green]
+e -> g [color = Green]
+}
+
+[1]: 'Iron ore'
+[2]: 'Iron ingot'
+[3]: 'Iron rod'
+[4]: 'Iron plate'
+[5]: 'Screw'
+[6]: 'Reinforced iron plate'
+[7]: 'Rotor'
+
+")
+  
+```
+Headache inducing for a couple reasons. First, both reinforced iron plates and rotors need screws, and also the rotor recipe needs both screws and iron rods...but screws are made from iron rods too.....so you have to balance screws with iron rods to make rotors....but also you need to make screws to make reinforced plates...oh boy.
+
+It was here that I turned to the hard work that had already been done by people trying to [solve similar problems in factorio](https://kirkmcdonald.github.io/posts/calculation.html) for a better way of representing the recipe data that would actually let me make decisions with math of all things. Instead of a graph or table, the recipes can be represented with a matrix that has individual recipes that you'd input into the buildings in the columns and the items that the recipes require/produce in the columns. 

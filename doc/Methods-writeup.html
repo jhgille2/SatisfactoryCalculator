@@ -1401,7 +1401,7 @@ color: #333333;
             // Get node id
             var nodeid = e.currentTarget.id;
             // Get node text object and make an array
-            var node_texts = $("#" + id + " #" + nodeid + " text");
+            var node_texts = $("#" + nodeid + " text");
             //var node_path = $("#" + nodeid + " path")[0];
             var text_array = node_texts.map(function() {return $(this).text(); }).toArray();
             // Build return object *obj* with node-id, node text values and node fill
@@ -1619,8 +1619,8 @@ intermediaries to produce the final product. The way in which these
 final products is produced from the raw resources is called a
 <strong>recipe</strong>. For an example, consider the early game recipes
 for iron plates and iron rods:</p>
-<div id="htmlwidget-6a8c3b6502d3db7861ad" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6a8c3b6502d3db7861ad">{"x":{"diagram":"\ndigraph a_nice_graph {\n\n# node definitions with substituted label text\nnode [fontname = Helvetica]\na [label = \"Iron ore\"]\nb [label = \"Iron ingot\"]\nc [label = \"Iron rod\"]\nd [label = \"Iron plate\"]\n\n\n# edge definitions with the node IDs\na -> b [color = Red]\nb -> c [color = Blue]\nb -> d [color = Blue]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-607c22adb04384e8f0b9" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-607c22adb04384e8f0b9">{"x":{"diagram":"\ndigraph a_nice_graph {\n\n# node definitions with substituted label text\nnode [fontname = Helvetica]\na [label = \"Iron ore\"]\nb [label = \"Iron ingot\"]\nc [label = \"Iron rod\"]\nd [label = \"Iron plate\"]\n\n\n# edge definitions with the node IDs\na -> b [color = Red]\nb -> c [color = Blue]\nb -> d [color = Blue]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>I used colors to indicate what building makes each product. In the
 diagram above, a red arrow indicates a process is done in a smelter, and
 a blue arrow indicates a constructor is used.</p>
@@ -1636,9 +1636,9 @@ iron rods, and how much should go towards the plates?</p>
 are needed, so as long as you are making more than 0 of each product,
 you’ll eventually meet the milestone. However, I think a good objective
 here first would be to produce an amount of plates and/or rods that
-consumes all the currently available iron ore rate. To do this, you
-first have to know the rates at which items are consumed to produce
-products. In this case:</p>
+consumes all the currently available iron ore rate without having to
+under clock any factories. To do this, you first have to know the rates
+at which items are consumed to produce products. In this case:</p>
 <p><span class="math inline">\(30\ Iron\ ore = 30\ Iron\
 ingot\)</span><br />
 <span class="math inline">\(30\ Iron\ ingot = 20\ Iron\
@@ -1647,7 +1647,25 @@ plate\)</span><br />
 <p>Put in other words, for each iron ore/min, you can produce 1
 ingot/min. You can also produce 1 iron rod/min for every ingot/min.
 However, you can only produce iron plates at 2/3 the rate that ingots
-are supplied.</p>
+are supplied. In this case, you really only have to worry about the
+rates that just the iron plate and iron rod recipes consume ingots since
+ore is converted to ingots at a 1:1 ratio.</p>
+<p>This example is pretty straightforward, if you don’t want to under
+clock you can either maximize iron plates and build two factories (2x30
+= 60), maximize iron rods and build four factories (4x15 = 60), or
+produce both and make 1 plate factory and two rod factories [(1x30) +
+(2x15) = 60].</p>
+<p>This example is pretty trivial, but how about when things get a bit
+spicier? The first headache-inducing production tree I ran into was when
+I needed to make both reinforced iron plates and rotors at the same
+time.</p>
+<div id="htmlwidget-3f43895d095106dedf5f" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3f43895d095106dedf5f">{"x":{"diagram":"\ndigraph a_nice_graph {\n\n# node definitions with substituted label text\nnode [fontname = Helvetica]\na [label = \"Iron ore\"]\nb [label = \"Iron ingot\"]\nc [label = \"Iron rod\"]\nd [label = \"Iron plate\"]\ne [label = \"Screw\"]\nf [label = \"Reinforced iron plate\"]\ng [label = \"Rotor\"]\n\n\n# edge definitions with the node IDs\na -> b [color = Red]\nb -> c [color = Blue]\nb -> d [color = Blue]\nd -> f [color = Green]\nc -> e [color = Blue]\ne -> f [color = Green]\nc -> g [color = Green]\ne -> g [color = Green]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>Headache inducing for a couple reasons. First, both reinforced iron
+plates and rotors need screws, and also the rotor recipe needs both
+screws and iron rods…but screws are made from iron rods too…..so you
+have to balance screws with iron rods to make rotors….but also you need
+to make screws to make reinforced plates…oh boy.</p>
 </div>
 
 
