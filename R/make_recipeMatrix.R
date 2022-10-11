@@ -6,15 +6,22 @@
 #' @param product_longnames
 #' @param recipeGraph
 #' @param recipeData
-make_recipeMatrix <- function(itemVector, recipeGraph, recipeData) {
+make_recipeMatrix <- function(itemVector, recipeGraph, recipeData, itemMode = "slug") {
 
   # Find the item names for the clean names in the item vector
-  unique_products <- recipeData %>% 
-    dplyr::filter(slug %in% itemVector) %>% 
-    select(product_item) %>% 
-    unlist() %>% 
-    as.character() %>% 
-    unique()
+  if(itemMode == "slug"){
+    unique_products <- recipeData %>% 
+      dplyr::filter(slug %in% itemVector) %>% 
+      select(product_item) %>% 
+      unlist() %>% 
+      as.character() %>% 
+      unique()
+  }else if(itemMode == "component"){
+    unique_products <- itemVector
+  }else{
+    stop("itemMode must be either 'slug' for recipe names or 'component' for component names.")
+  }
+
   
   # Get the neighborhood graph for each item (the production chain for each item)
   all_ego_graphs <- make_ego_graph(recipeGraph, 

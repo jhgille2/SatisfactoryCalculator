@@ -1,8 +1,74 @@
+## Section: Setup (don't mess with this part)
+##################################################
+
 ## Load your packages, e.g. library(targets).
 source("./packages.R")
 
 ## Load your R files
 lapply(list.files("./R", full.names = TRUE), source)
+
+
+## Section: INSTRUCTIONS
+##################################################
+# This script lets you optimize relative production rates of some set of components.
+# 
+# I have set it up so that the optimization relatively automated but it is not intuitive what inputs
+# it is not intuitive what inputs should go where in the script. 
+# 
+# There are 4 sections which need to be set by the user before running the script. 
+#
+# First, get the full table of recipes by running tar_make(RecipeData) in the console. 
+# Then run tar_load(RecipeData) to load the table into the environment. 
+# The full recipe table can then be inspected by running View(RecipeData$AllRecipes). This
+# Will bring up a table of all the recipes which will be helpful for finding most of the other
+# required inputs.
+#
+# Next, enter any alternative recipes you've unlocked by replacing c(NULL) in
+# the available_alternative_recipes target with a comma seperated character
+# vector of the recipe 'slug' names for the unlocked alternative recipes.
+# You can find the 'slug' names from the full recipe table. 
+#
+# Example: if you've unlocked the steel rotor and recycled plastic alternate recipes, 
+# you could replace c(NULL) with c("alternate-steel-rotor", "alternate-recycled-plastic")
+#
+#
+# Now, go to the Opt_products target. Here, put in the items you want to produce. 
+# These have the be product names, again as they appear in the recipes table. 
+# Enter these in the form of a named vector like c(product name = some number, another product name = some number)
+# c("product name" = some number, "another product name" = some number). The numbers you set these
+# product names to set the upper limit of the rate that the solver will try to find a solution for to produce each item at. 
+# 
+# Example: If you want to make rotors and reinforced iron plates, you could set this to 
+# c("Desc_Rotor_C" = 50, "Desc_IronPlateReinforced_C" = 50) which means that you want the solver to search for factories
+# that will produce rotors and reinforced iron plates at some rate between >0 and 50 per minute. 
+#
+# Next, provide your available resources in the same format as the desired products. 
+# make sure each available resource is negative. 
+#
+# Example: If you have 120 iron ore and 60 copper available, this would be set to  
+# c("Desc_OreCopper_C" = -60, "Desc_OreIron_C"   = -120)
+#
+# Finally, in the LP result target, you need to set three arguments in the recipe_lp_rate_grid
+# function: 
+# 
+# 1. integerFactories: Do you want the solution to have only full number factories? In practice
+# this will likely find a solution that produces some intermediate components in excess but could
+# also be desirable for the early game where you could want to store intermediate components. 
+#
+# 2. reqAmt: I made this calculator to find the factory that would reach some milestone
+# the fastest. That is equivalent to finding the factory that produces some set of items
+# at a rate relative to one another that is proportional to the amounts of each item that
+# is required for the objective. If you are using the script to complete the objective, 
+# it makes sense to set this argument equal to the number of each product that is required for the objective, 
+# enter these numbers in the same order the product names appear in the Opt_products step. 
+#
+# 3. gridsize: This controls the size of the grid that the solver will search
+# for a factory. Keep relatively small for factories that will be producing lots of different products.
+
+
+
+## Section: Targets plan - Begin control script
+##################################################
 
 ## tar_plan supports drake-style targets and also tar_target()
 tar_plan(
@@ -22,8 +88,18 @@ tar_plan(
               get_recipe_data(url = Recipe_url)),
 
   # Graph representation(s) of the recipe data
-   tar_target(RecipeGraphs,
-              make_recipe_graphs(recipetables = RecipeData)),
+   # tar_target(RecipeGraphs,
+   #            make_recipe_graphs(recipetables = RecipeData)),
+  
+  # The names of the alternative recipes you've unlocked
+  # Set to c(NULL) if none have been unlocked
+  tar_target(available_alternate_recipes, 
+             c(NULL)),
+  
+  # Make a list holding the current recipe table and its associated graph
+  # from the alternate recipes that have been unlocked
+  tar_target(current_recipes, 
+             make_current_recipes(RecipeData, available_alternate_recipes)),
   
   # tar_target(RecipeData, 
   #            load(here("data", "RecipeData.RData"))),
@@ -41,7 +117,7 @@ tar_plan(
   # TODO: Look into global solvers that work well with linear constraints, I think
   # that'd be more appropriate (and efficient) for the kind of problem I'm trying to solve here. 
   # Basically, the problem right now is the optimization is "detached" from my actual 
-  # objectives. What is being optimized is the net item production rates  after constraints
+  # objectives. What is being optimized is the net item production rates relative to one another after constraints
   # are put on different minimum net rates of some objective items. Really what I'm 
   # trying to optimize is the time to complete an objective which requires some set of 
   # objective items. As it stands right now, my strategy essentially performs an 
@@ -54,46 +130,40 @@ tar_plan(
   # Set the items to produce (recipe names for the objective function).
   # This can also be improved in the long run by instead getting the names 
   # of recipes from the component names so that alternate recipes can be more
-  # easily accomodated. 
-  # I think this can be done relatively easily by adjustting the makea_recipematrix function
+  # easily accommodated. 
+  # I think this can be done relatively easily by adjusting the make_recipematrix function
   # so that it builds the recipe matrix from the product names instead of the recipe names
   # and then the recipes which produce the products can be found with the sign
   # of the coefficient for the product row.
-  tar_target(Opt_recipes, 
-             c("modular-engine",
-               "adaptive-control-unit", 
-               "supercomputer")), 
+  # tar_target(Opt_recipes, 
+  #            c("automated-wiring", 
+  #              "smart-plating")), 
   
   # And component names with maximum desired production rates, used to make a crossed grid of 
   # minimum production rates for each products to feed into the lp solver.
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_4_C" = 50,
-               "Desc_SpaceElevatorPart_5_C" = 50, 
-               "Desc_ComputerSuper_C"       = 50)), 
+             c("Desc_SpaceElevatorPart_3_C" = 30, 
+               "Desc_SpaceElevatorPart_1_C" = 30)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
-             c("Desc_OreCopper_C" = -3450, 
-               "Desc_OreIron_C"   = -7354, 
-               "Desc_Coal_C"      = -1560, 
-               "Desc_Stone_C"     = -2640, 
-               "Desc_RawQuartz_C" = -480, 
-               "Desc_LiquidOil_C" = -1740, 
-               "Desc_Water_C"     = -5000, 
-               "Desc_OreGold_C"   = -720)),
+             c("Desc_OreCopper_C" = -120, 
+               "Desc_OreIron_C"   = -240, 
+               "Desc_Coal_C"      = -120, 
+               "Desc_Water_C"     = -999999)),
   
   # Run the solver for the given items
   tar_target(LP_result, 
              recipe_lp_rate_grid(startingResources = available_resources,
                                  products          = Opt_products, 
-                                 product_longnames = Opt_recipes, 
-                                 recipeData        = RecipeData$NoAlternates, 
-                                 recipeGraph       = RecipeGraphs$NoAlternates, 
-                                 integerFactories  = FALSE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
-                                 reqAmt            = c(500, 100, 100),  # How many of each product are required for the objective
-                                 gridsize          = 50)),              # How many production rate minima to give to the solver...important to 
+                                # product_longnames = Opt_recipes, 
+                                 recipeData        = current_recipes$data_frame, 
+                                 recipeGraph       = current_recipes$graph, 
+                                 integerFactories  = TRUE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
+                                 reqAmt            = c(50, 10),      # How many of each product are required for the objective
+                                 gridsize          = 50)),            # How many production rate minima to give to the solver...important to 
   # remember that the solver will run gridsize^length(Opt_products) times
   # so keep this number small if you have a lot of products.
   
@@ -106,7 +176,7 @@ tar_plan(
   # Maybe something with the nodes (individual recipes) instead?
   tar_target(CytoscapeReady, 
              clean_lp_results(lp_table    = LP_result, 
-                              recipeData  = RecipeData$NoAlternates, 
-                              recipeGraph = RecipeGraphs$NoAlternates, 
-                              products    = Opt_recipes))
+                              recipeData  = current_recipes$data_frame, 
+                              recipeGraph = current_recipes$graph, 
+                              products    = Opt_products))
 )

@@ -22,7 +22,8 @@ pacman::p_load(dplyr,
                job,
                here, 
                purrr, 
-               tibble)
+               tibble, 
+               DiagrammeR)
 
 conflict_prefer("filter", "dplyr")
 

@@ -1,13 +1,12 @@
 recipe_lp_base <- function(startingResources = available_resources,
-                           products = Opt_products, product_longnames =
-                             Opt_recipes, recipeData =
+                           products = Opt_products, recipeData =
                              RecipeData$NoAlternates, recipeGraph =
                              RecipeGraphs$NoAlternates, integerFactories =
                              TRUE) {
   
   # Make a matrix of consumption/production rates. Recipes as columns, 
   # components in rows
-  recipeMatrix <- make_recipeMatrix(product_longnames, recipeGraph, recipeData)
+  recipeMatrix <- make_recipeMatrix(names(products), recipeGraph, recipeData, itemMode = "component")
   
   # Constraint direction and right hand side for the linear program
   # Basically, make sure that there is no negative net flow in a solution
@@ -34,6 +33,7 @@ recipe_lp_base <- function(startingResources = available_resources,
   rhs <- as.numeric(rhs)
   
   # The indices of the objective products in the column names of the matrix
+  product_longnames <- colnames(recipeMatrix)[which(recipeMatrix[names(products),] > 0, arr.ind = TRUE)[, 2]]
   objective_indices <- match(product_longnames, colnames(recipeMatrix))
 
   ##### THIS NEEDS A LOT OF WORK #####
@@ -56,13 +56,14 @@ recipe_lp_base <- function(startingResources = available_resources,
 # different combinations of minimum constraints for the desired product
 # components
 recipe_lp_rate_grid <- function(startingResources = available_resources,
-                                products = Opt_products, product_longnames =
-                                  Opt_recipes, recipeData =
+                                products = Opt_products, recipeData =
                                   RecipeData$NoAlternates, recipeGraph =
                                   RecipeGraphs$NoAlternates, integerFactories =
                                   TRUE, 
                                   reqAmt = NULL, 
                                 gridsize = 25){
+  
+  on.exit(plan(sequential))
   
 
 
@@ -85,16 +86,16 @@ recipe_lp_rate_grid <- function(startingResources = available_resources,
   
   nWorkers <- ceiling(parallel::detectCores() *0.5)
   plan(multisession, workers = nWorkers, gc = TRUE)
-  
   all_lps <- future_map(rate_args, function(x) recipe_lp_base(products          = x, 
-                                                              startingResources = startingResources, 
-                                                              product_longnames = product_longnames, 
+                                                              startingResources = startingResources,
                                                               recipeData        = recipeData, 
                                                               recipeGraph       = recipeGraph, 
                                                               integerFactories  = integerFactories), 
                         .progress = TRUE)
   
-  recipeMatrix <- make_recipeMatrix(product_longnames, recipeGraph, recipeData)
+  plan(sequential)
+  
+  recipeMatrix <- make_recipeMatrix(names(products), recipeGraph, recipeData, itemMode = "component")
   
   # functions to get just the objectives set for the desired components
   clean_objective <- function(x, recipeMatrix, outputobjectives){

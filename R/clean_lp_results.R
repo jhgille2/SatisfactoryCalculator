@@ -4,12 +4,12 @@
 #'
 #' @title
 #' @param lp_table
-clean_lp_results <- function(lp_table = LP_result, recipeData = RecipeData$NoAlternates, recipeGraph = RecipeGraphs$NoAlternates, products = Opt_recipes) {
+clean_lp_results <- function(lp_table = LP_result, recipeData = RecipeData$NoAlternates, recipeGraph = RecipeGraphs$NoAlternates, products = Opt_products) {
 
   # Calculate how many items are being produces and consumed from the lp solution
   # Can extend this in the future to apply the function to each solution, realistically I think I should focus
   # on making a better objective function instead though
-  itemConsumptionMatrix <- t(make_recipeMatrix(products, recipeGraph = recipeGraph, recipeData = recipeData)) * lp_table$solution[[1]]
+  itemConsumptionMatrix <- t(make_recipeMatrix(names(products), recipeGraph = recipeGraph, recipeData = recipeData, itemMode = "component")) * lp_table$solution[[1]]
   
   recipeCounts <- recipeData %>% 
     select(name, product_item) %>% 
