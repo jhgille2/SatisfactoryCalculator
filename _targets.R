@@ -86,10 +86,6 @@ tar_plan(
   # Download the data from the url
    tar_target(RecipeData,
               get_recipe_data(url = Recipe_url)),
-
-  # Graph representation(s) of the recipe data
-   # tar_target(RecipeGraphs,
-   #            make_recipe_graphs(recipetables = RecipeData)),
   
   # The names of the alternative recipes you've unlocked
   # Set to c(NULL) if none have been unlocked
@@ -101,9 +97,7 @@ tar_plan(
   tar_target(current_recipes, 
              make_current_recipes(RecipeData, available_alternate_recipes)),
   
-  # tar_target(RecipeData, 
-  #            load(here("data", "RecipeData.RData"))),
-  # 
+
   ## Section: Factory optimization
   ##################################################
   
@@ -127,18 +121,6 @@ tar_plan(
   # in a more efficient and directed manner. 
   
   
-  # Set the items to produce (recipe names for the objective function).
-  # This can also be improved in the long run by instead getting the names 
-  # of recipes from the component names so that alternate recipes can be more
-  # easily accommodated. 
-  # I think this can be done relatively easily by adjusting the make_recipematrix function
-  # so that it builds the recipe matrix from the product names instead of the recipe names
-  # and then the recipes which produce the products can be found with the sign
-  # of the coefficient for the product row.
-  # tar_target(Opt_recipes, 
-  #            c("automated-wiring", 
-  #              "smart-plating")), 
-  
   # And component names with maximum desired production rates, used to make a crossed grid of 
   # minimum production rates for each products to feed into the lp solver.
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
@@ -161,7 +143,7 @@ tar_plan(
                                 # product_longnames = Opt_recipes, 
                                  recipeData        = current_recipes$data_frame, 
                                  recipeGraph       = current_recipes$graph, 
-                                 integerFactories  = TRUE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
+                                 integerFactories  = FALSE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
                                  reqAmt            = c(50, 10),      # How many of each product are required for the objective
                                  gridsize          = 50)),            # How many production rate minima to give to the solver...important to 
   # remember that the solver will run gridsize^length(Opt_products) times
