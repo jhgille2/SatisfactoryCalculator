@@ -18,7 +18,6 @@ recipe_lp_base <- function(startingResources = available_resources,
     
     currentRes      <- which(rownames(recipeMatrix) ==  names(startingResources)[[i]])
     rhs[currentRes] <- startingResources[[i]]
-    
   }
   
   # Insist that net flow of heavy oil residue must equal zero

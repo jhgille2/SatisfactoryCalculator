@@ -23,7 +23,7 @@ pacman::p_load(dplyr,
                here, 
                purrr, 
                tibble, 
-               DiagrammeR)
+               visNetwork)
 
 conflict_prefer("filter", "dplyr")
 

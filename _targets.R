@@ -10,9 +10,14 @@ lapply(list.files("./R", full.names = TRUE), source)
 
 ## Section: INSTRUCTIONS
 ##################################################
-# This script lets you optimize relative production rates of some set of components.
+# This script lets you optimize relative production rates of some set of components, 
+# given some known availability of raw resources.
+#
+# I thought that optimization in particular could be useful because it would
+# let you design a factory that would reach some milestone production goal
+# the fastest.
 # 
-# I have set it up so that the optimization relatively automated but it is not intuitive what inputs
+# I have set it up so that the optimization relatively automated but 
 # it is not intuitive what inputs should go where in the script. 
 # 
 # There are 4 sections which need to be set by the user before running the script. 
@@ -34,7 +39,7 @@ lapply(list.files("./R", full.names = TRUE), source)
 #
 # Now, go to the Opt_products target. Here, put in the items you want to produce. 
 # These have the be product names, again as they appear in the recipes table. 
-# Enter these in the form of a named vector like c(product name = some number, another product name = some number)
+# Enter these in the form of a named vector like
 # c("product name" = some number, "another product name" = some number). The numbers you set these
 # product names to set the upper limit of the rate that the solver will try to find a solution for to produce each item at. 
 # 
@@ -126,28 +131,46 @@ tar_plan(
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_3_C" = 30, 
-               "Desc_SpaceElevatorPart_1_C" = 30)), 
+             c("Desc_SpaceElevatorPart_2_C" = 30, 
+               "Desc_SpaceElevatorPart_4_C" = 30,
+               "Desc_SpaceElevatorPart_5_C" = 30)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
-             c("Desc_OreCopper_C" = -120, 
-               "Desc_OreIron_C"   = -240, 
-               "Desc_Coal_C"      = -120, 
+             c("Desc_OreCopper_C" = -1200, 
+               "Desc_OreIron_C"   = -1200, 
+               "Desc_Coal_C"      = -1200,
+               "Desc_Stone_C"     = -1200,
+               "Desc_LiquidOil_C" = -1200,
+               "Desc_RawQuartz_C" = -1200,
                "Desc_Water_C"     = -999999)),
   
   # Run the solver for the given items
   tar_target(LP_result, 
              recipe_lp_rate_grid(startingResources = available_resources,
                                  products          = Opt_products, 
-                                # product_longnames = Opt_recipes, 
                                  recipeData        = current_recipes$data_frame, 
                                  recipeGraph       = current_recipes$graph, 
-                                 integerFactories  = FALSE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
-                                 reqAmt            = c(30, 30),      # How many of each product are required for the objective
-                                 gridsize          = 50)),            # How many production rate minima to give to the solver...important to 
+                                 integerFactories  = FALSE,                  # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
+                                 reqAmt            = c(2500, 500, 100),      # How many of each product are required for the objective
+                                 gridsize          = 10)),                   # How many production rate minima to give to the solver...important to 
   # remember that the solver will run gridsize^length(Opt_products) times
   # so keep this number small if you have a lot of products.
+  
+  # IN DEVELOPMENT(?)
+  # Sparse grid search followed by a local constrained optimization of the best
+  # result of the grid search. Seems to be a good improvement so far over
+  # the pure grid search. Especially when factories get big
+  #
+  # So far, this seems like an improvement across the board. Very good improvement
+  # on sparse grid searches and equivalent to very dense grid searches so far. 
+  # I'm still gonna leave the grid search
+  # target there for now but this does seem to be working
+  tar_target(constrained_LP_result, 
+             recipe_constr_optim(Opt_products, 
+                                 current_recipes, 
+                                 available_resources, 
+                                 req_amt = c(2500, 500, 100))),
   
   # Clean up the output into a format that's ready for plotting in cytoscape
   #
@@ -160,5 +183,12 @@ tar_plan(
              clean_lp_results(lp_table    = LP_result, 
                               recipeData  = current_recipes$data_frame, 
                               recipeGraph = current_recipes$graph, 
-                              products    = Opt_products))
+                              products    = Opt_products)),
+  
+  # Same thing but with the constrained optimization result
+  tar_target(CytoscapeReady_constrained, 
+             clean_constrained_lp_results(lp_result   = constrained_LP_result, 
+                                          recipeData  = current_recipes$data_frame, 
+                                          recipeGraph = current_recipes$graph, 
+                                          products    = Opt_products))
 )
