@@ -144,7 +144,7 @@ tar_plan(
                                  recipeData        = current_recipes$data_frame, 
                                  recipeGraph       = current_recipes$graph, 
                                  integerFactories  = FALSE,             # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
-                                 reqAmt            = c(50, 10),      # How many of each product are required for the objective
+                                 reqAmt            = c(30, 30),      # How many of each product are required for the objective
                                  gridsize          = 50)),            # How many production rate minima to give to the solver...important to 
   # remember that the solver will run gridsize^length(Opt_products) times
   # so keep this number small if you have a lot of products.
