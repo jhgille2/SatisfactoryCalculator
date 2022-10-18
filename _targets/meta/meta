@@ -4,17 +4,17 @@ available_alternate_recipes|stem|825a16277ad3a8b1|9691588b031dffa0|a3dad144c4065
 available_resources|stem|605d8ba74ec819d3|de731016818d62bf|d5952a468c1d9178|-1802490998||t19283.6064961342s|999d91c8435f59d2|165|rds|local|vector|||0||
 clean_constrained_lp_results|function|5d496f11753f2e80|||||||||||||||
 clean_lp_results|function|226e9577882ef0a9|||||||||||||||
-constrained_LP_result|stem|f4e08ef453388393|445abd87b3327e8b|f40d775387b84f55|-1362391085||t19283.6086649189s|377d8874e2db2342|1081|rds|local|vector|||186.91||
+constrained_LP_result|stem|14b76de4faab19b6|445abd87b3327e8b|793e8225dd354626|-1362391085||t19283.6453831603s|baccbae5ef1fd57c|1090|rds|local|vector|||178.69||
 current_recipes|stem|75a2b64aa79d4646|e5c46855e056b7f1|4f32423613782d59|1052339811||t19283.5835382497s|f5113bcdc9e77a5d|11396|rds|local|vector|||0||
 CytoscapeReady|stem||14ff5a15df129e9c|8ead062da548c2fa|-2041118127||t19283.5859640234s||0|rds|local|vector|||0.16||object LP_result not found
-CytoscapeReady_constrained|stem|5df7f919290ba95d|6846ce97e31a2869|d82839fbc0cf1eb4|-2092242297||t19283.6086691434s|dc3cff23f7d8e5a0|2769|rds|local|vector|||0.35||
+CytoscapeReady_constrained|stem|f91705c80bc47408|6846ce97e31a2869|7fd7b2836aba8a9a|-2092242297||t19283.6453875121s|ee17b0c0dc6cdcc4|2746|rds|local|vector|||0.36||
 get_recipe_data|function|0ed6f7315ae47815|||||||||||||||
 make_current_recipes|function|4b9937dd68da9f08|||||||||||||||
 make_flowcharts|function|f36716b7a96e702d|||||||||||||||
 make_recipe_graphs|function|5fc4ec12fad0cd80|||||||||||||||
 make_recipe_subsets|function|5a10752ad39b2bc2|||||||||||||||
 make_recipeMatrix|function|811a54a3fa68363a|||||||||||||||
-Opt_products|stem|9d3db5ae3b25694f|8f885a75f32fda56|a3dad144c40657ed|-308485042||t19283.6065009721s|aa798d680db62784|117|rds|local|vector|||0||
+Opt_products|stem|5e1542e116c0b0c2|c57063c46bc701e6|a3dad144c40657ed|-308485042||t19283.643314408s|aa798d680db62784|117|rds|local|vector|||0||
 recipe_constr_optim|function|4b828dae99f0edb0|||||||||||||||
 recipe_lp_base|function|c836f1448abec061|||||||||||||||
 recipe_lp_grid_solutions|function|5ac52bf96dcfdcb0|||||||||||||||

@@ -131,9 +131,9 @@ tar_plan(
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_2_C" = 10, 
-               "Desc_SpaceElevatorPart_4_C" = 10,
-               "Desc_SpaceElevatorPart_5_C" = 10)), 
+             c("Desc_SpaceElevatorPart_2_C" = 5, 
+               "Desc_SpaceElevatorPart_4_C" = 5,
+               "Desc_SpaceElevatorPart_5_C" = 5)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 

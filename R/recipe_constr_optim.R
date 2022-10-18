@@ -41,7 +41,7 @@ recipe_constr_optim <- function(Opt_products, current_recipes,
                                               recipeGraph       = current_recipes$graph, 
                                               integerFactories  = FALSE,             
                                               reqAmt            = req_amt,      
-                                              gridsize          = 20)
+                                              gridsize          = 30)
   
   # Find the resources that are required for the current recipes
   resource_names_matches <- match(names(available_resources), rownames(recipe_matrix))
