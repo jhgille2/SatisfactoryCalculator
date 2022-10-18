@@ -131,9 +131,9 @@ tar_plan(
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_2_C" = 30, 
-               "Desc_SpaceElevatorPart_4_C" = 30,
-               "Desc_SpaceElevatorPart_5_C" = 30)), 
+             c("Desc_SpaceElevatorPart_2_C" = 10, 
+               "Desc_SpaceElevatorPart_4_C" = 10,
+               "Desc_SpaceElevatorPart_5_C" = 10)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
@@ -143,7 +143,7 @@ tar_plan(
                "Desc_Stone_C"     = -1200,
                "Desc_LiquidOil_C" = -1200,
                "Desc_RawQuartz_C" = -1200,
-               "Desc_Water_C"     = -999999)),
+               "Desc_Water_C"     = -9007199254740991)),
   
   # Run the solver for the given items
   # tar_target(LP_result, 
