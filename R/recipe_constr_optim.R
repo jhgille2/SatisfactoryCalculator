@@ -54,7 +54,7 @@ recipe_constr_optim <- function(Opt_products, current_recipes,
   
   # Now, for each required resource, replace the 0 with the amount of the available resource
   for(i in 1:length(required_resource_indices)){
-    ci[[resource_names_matches[[required_resource_indices[[i]]]]]] <- available_resources[[i]] 
+    ci[[resource_names_matches[[required_resource_indices[[i]]]]]] <- available_resources[[required_resource_indices[[i]]]] 
   }
   
   ci <- ci - 0.000000001

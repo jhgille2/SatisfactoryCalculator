@@ -146,14 +146,14 @@ tar_plan(
                "Desc_Water_C"     = -999999)),
   
   # Run the solver for the given items
-  tar_target(LP_result, 
-             recipe_lp_rate_grid(startingResources = available_resources,
-                                 products          = Opt_products, 
-                                 recipeData        = current_recipes$data_frame, 
-                                 recipeGraph       = current_recipes$graph, 
-                                 integerFactories  = FALSE,                  # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
-                                 reqAmt            = c(2500, 500, 100),      # How many of each product are required for the objective
-                                 gridsize          = 10)),                   # How many production rate minima to give to the solver...important to 
+  # tar_target(LP_result, 
+  #            recipe_lp_rate_grid(startingResources = available_resources,
+  #                                products          = Opt_products, 
+  #                                recipeData        = current_recipes$data_frame, 
+  #                                recipeGraph       = current_recipes$graph, 
+  #                                integerFactories  = FALSE,                  # Basically, do you want to underclock the last factory for an item or not ***This will run VERY slowly for complicated production chains if set to TRUE***
+  #                                reqAmt            = c(2500, 500, 100),      # How many of each product are required for the objective
+  #                                gridsize          = 10)),                   # How many production rate minima to give to the solver...important to 
   # remember that the solver will run gridsize^length(Opt_products) times
   # so keep this number small if you have a lot of products.
   
@@ -179,12 +179,12 @@ tar_plan(
   # or even if I should since the same material can be made by multiple recipes and 
   # it'll only get more confusing with alternate recipes in the mix. 
   # Maybe something with the nodes (individual recipes) instead?
-  tar_target(CytoscapeReady, 
-             clean_lp_results(lp_table    = LP_result, 
-                              recipeData  = current_recipes$data_frame, 
-                              recipeGraph = current_recipes$graph, 
-                              products    = Opt_products)),
-  
+  # tar_target(CytoscapeReady, 
+  #            clean_lp_results(lp_table    = LP_result, 
+  #                             recipeData  = current_recipes$data_frame, 
+  #                             recipeGraph = current_recipes$graph, 
+  #                             products    = Opt_products)),
+  # 
   # Same thing but with the constrained optimization result
   tar_target(CytoscapeReady_constrained, 
              clean_constrained_lp_results(lp_result   = constrained_LP_result, 
