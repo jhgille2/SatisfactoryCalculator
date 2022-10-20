@@ -131,9 +131,9 @@ tar_plan(
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_2_C" = 5, 
-               "Desc_SpaceElevatorPart_4_C" = 5,
-               "Desc_SpaceElevatorPart_5_C" = 5)), 
+             c("Desc_SpaceElevatorPart_2_C" = 10, 
+               "Desc_SpaceElevatorPart_4_C" = 10,
+               "Desc_SpaceElevatorPart_5_C" = 10)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
@@ -166,6 +166,8 @@ tar_plan(
   # on sparse grid searches and equivalent to very dense grid searches so far. 
   # I'm still gonna leave the grid search
   # target there for now but this does seem to be working
+  #
+  # ** Look into using the solnp function from the Rsolnp package
   tar_target(constrained_LP_result, 
              recipe_constr_optim(Opt_products, 
                                  current_recipes, 
