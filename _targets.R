@@ -137,12 +137,12 @@ tar_plan(
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
-             c("Desc_OreCopper_C" = -1200, 
-               "Desc_OreIron_C"   = -1200, 
-               "Desc_Coal_C"      = -1200,
-               "Desc_Stone_C"     = -1200,
-               "Desc_LiquidOil_C" = -1200,
-               "Desc_RawQuartz_C" = -1200,
+             c("Desc_OreCopper_C" = -2200, 
+               "Desc_OreIron_C"   = -2200, 
+               "Desc_Coal_C"      = -2200,
+               "Desc_Stone_C"     = -2200,
+               "Desc_LiquidOil_C" = -2200,
+               "Desc_RawQuartz_C" = -2200,
                "Desc_Water_C"     = -9007199254740991)),
   
   # Run the solver for the given items
