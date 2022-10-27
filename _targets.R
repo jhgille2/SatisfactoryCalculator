@@ -90,8 +90,7 @@ tar_plan(
   # The names of the alternative recipes you've unlocked
   # Set to c(NULL) if none have been unlocked
   tar_target(available_alternate_recipes, 
-             c("alternate-pure-iron-ingot", 
-               "alternate-pure-copper-ingot")),
+             c(NULL)),
   
   # Make a list holding the current recipe table and its associated graph
   # from the alternate recipes that have been unlocked
