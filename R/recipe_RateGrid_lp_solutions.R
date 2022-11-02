@@ -32,7 +32,12 @@ recipe_lp_base <- function(startingResources = available_resources,
   rhs <- as.numeric(rhs)
   
   # The indices of the objective products in the column names of the matrix
-  product_longnames <- colnames(recipeMatrix)[which(recipeMatrix[names(products),] > 0, arr.ind = TRUE)[, 2]]
+  if(length(products) == 1){
+    product_longnames <- colnames(recipeMatrix)[which(recipeMatrix[names(products),] > 0, arr.ind = TRUE)]
+  }else{
+    product_longnames <- colnames(recipeMatrix)[which(recipeMatrix[names(products),] > 0, arr.ind = TRUE)[, 2]]
+  }
+  
   objective_indices <- match(product_longnames, colnames(recipeMatrix))
 
   ##### THIS NEEDS A LOT OF WORK #####

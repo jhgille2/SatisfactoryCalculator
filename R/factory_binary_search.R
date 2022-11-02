@@ -8,6 +8,16 @@
 factory_binary_search <- function(Opt_products, current_recipes,
                                   available_resources, req_amt = c(2500, 500,
                                   100), max_rate = 50) {
+  
+  if(length(Opt_products) == 1){
+    res <- recipe_lp_base(available_resources, 
+                          Opt_products, 
+                          recipeData = current_recipes$data_frame, 
+                          recipeGraph = current_recipes$graph, 
+                          integerFactories = FALSE)
+    
+    return(res)
+  }
 
   # Get the recipe matrix for these products
   recipe_matrix <- make_recipeMatrix(names(Opt_products), 

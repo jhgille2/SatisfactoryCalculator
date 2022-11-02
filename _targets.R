@@ -106,16 +106,15 @@ tar_plan(
   # Basically my (bad I feel) solution to optimize the factory relative to the time it
   # takes to complete an objective that uses the products.
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_2_C" = 20, 
-               "Desc_SpaceElevatorPart_4_C" = 20,
-               "Desc_SpaceElevatorPart_5_C" = 20)), 
+             c("Desc_SpaceElevatorPart_3_C" = 0, 
+               "Desc_SteelPlateReinforced_C" = 0)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
-             c("Desc_OreCopper_C" = -2200, 
-               "Desc_OreIron_C"   = -2200, 
-               "Desc_Coal_C"      = -2200,
-               "Desc_Stone_C"     = -2200,
+             c("Desc_OreCopper_C" = -240, 
+               "Desc_OreIron_C"   = -480, 
+               "Desc_Coal_C"      = -240,
+               "Desc_Stone_C"     = -480,
                "Desc_LiquidOil_C" = -2200,
                "Desc_RawQuartz_C" = -2200,
                "Desc_Water_C"     = -9007199254740991)),
@@ -128,7 +127,7 @@ tar_plan(
              factory_binary_search(Opt_products, 
                                    current_recipes, 
                                    available_resources, 
-                                   req_amt = c(2500, 500, 100), 
+                                   req_amt = c(1, 1), 
                                    max_rate = 50)), # Bounds the search space for production rates. 
                                                     # Room for optimization here by just automatically finding the maximum possible production rates directly
   
