@@ -78,7 +78,7 @@ tar_plan(
   ## Section: Data cleaning
   ##################################################
 
-  # The url to the recipe data (someones github repo)
+  # The url to the recipe data (Greenys github repo)
   tar_target(Recipe_url, 
              "https://raw.githubusercontent.com/greeny/SatisfactoryTools/dev/data/data.json", 
              format = "url"), 
