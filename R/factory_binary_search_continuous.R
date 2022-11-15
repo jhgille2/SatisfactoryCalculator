@@ -64,7 +64,7 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   upper_poduct_rates <- (amt_ratios * upper_boundry) %>% 
     set_names(names(Opt_products))
   
-  while(run < 50 & upper_boundry_delta > delta_lim){
+  while(run < 150 & upper_boundry_delta > delta_lim){
     
     
     # Solve the minimum and maximum parameter combinations
