@@ -66,20 +66,37 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   
   while(run < 150 & upper_boundry_delta > delta_lim){
     
-    
-    # Solve the minimum and maximum parameter combinations
-    # Technically only have to do one of these after the first time but I'm lazy
-    min_soln <- recipe_lp_base(products          = lower_product_rates, 
-                               startingResources = available_resources,
-                               recipeData        = current_recipes$data_frame, 
-                               recipeGraph       = current_recipes$graph, 
-                               integerFactories  = FALSE)
-    
-    max_soln <- recipe_lp_base(products          = upper_poduct_rates, 
-                               startingResources = available_resources,
-                               recipeData        = current_recipes$data_frame, 
-                               recipeGraph       = current_recipes$graph, 
-                               integerFactories  = FALSE)
+    if(run == 0){
+      # Solve the minimum and maximum parameter combinations
+      min_soln <- recipe_lp_base(products          = lower_product_rates, 
+                                 startingResources = available_resources,
+                                 recipeData        = current_recipes$data_frame, 
+                                 recipeGraph       = current_recipes$graph, 
+                                 integerFactories  = FALSE)
+      
+      max_soln <- recipe_lp_base(products          = upper_poduct_rates, 
+                                 startingResources = available_resources,
+                                 recipeData        = current_recipes$data_frame, 
+                                 recipeGraph       = current_recipes$graph, 
+                                 integerFactories  = FALSE)
+    }else{
+      if(max_status == 2){
+        max_soln <- recipe_lp_base(products          = upper_poduct_rates, 
+                                   startingResources = available_resources,
+                                   recipeData        = current_recipes$data_frame, 
+                                   recipeGraph       = current_recipes$graph, 
+                                   integerFactories  = FALSE)
+      }else{
+        min_soln <- max_soln
+        
+        max_soln <- recipe_lp_base(products          = upper_poduct_rates, 
+                                   startingResources = available_resources,
+                                   recipeData        = current_recipes$data_frame, 
+                                   recipeGraph       = current_recipes$graph, 
+                                   integerFactories  = FALSE)
+      }
+    }
+
     
     # Get the statuses of the max solution
     max_status <- max_soln$status
