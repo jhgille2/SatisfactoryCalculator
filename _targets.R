@@ -121,12 +121,11 @@ tar_plan(
   #    amount that are required
   # b) Uses all available resources
   tar_target(binary_LP_result, 
-             factory_binary_search(Opt_products, 
-                                   current_recipes, 
-                                   available_resources, 
-                                   req_amt = c(1, 1), 
-                                   max_rate = 50)), # Bounds the search space for production rates. 
-                                                    # Room for optimization here by just automatically finding the maximum possible production rates directly
+             factory_binary_search_continuous(Opt_products, 
+                                              current_recipes, 
+                                              available_resources, 
+                                              req_amt = c(1, 1), 
+                                              max_rate = 5)), # Starting upper bound for the the search space of production rates
   
   # Clean up the output into a format that's ready for plotting in cytoscape
   tar_target(CytoscapeReady_binary,
