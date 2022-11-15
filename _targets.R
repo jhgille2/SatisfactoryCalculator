@@ -101,10 +101,7 @@ tar_plan(
   ## Section: Factory optimization
   ##################################################
   
-  # And component names with maximum desired production rates, used to make a crossed grid of 
-  # minimum production rates for each products to feed into the lp solver.
-  # Basically my (bad I feel) solution to optimize the factory relative to the time it
-  # takes to complete an objective that uses the products.
+  # Component names to produce (set each equal to 0), 
   tar_target(Opt_products, 
              c("Desc_SpaceElevatorPart_3_C" = 0, 
                "Desc_SteelPlateReinforced_C" = 0)), 
