@@ -13,12 +13,12 @@ lapply(list.files("./R", full.names = TRUE), source)
 # This script lets you optimize relative production rates of some set of components, 
 # given some known availability of raw resources.
 #
-# I thought that optimization in particular could be useful because it would
+# I thought this optimization in particular could be useful because it would
 # let you design a factory that would reach some milestone production goal
 # the fastest.
 # 
-# I have set it up so that the optimization relatively automated but 
-# it is not intuitive what inputs should go where in the script. 
+# I have set it up so that the optimization is relatively automated but 
+# it is still not intuitive what inputs should go where in the script. 
 # 
 # There are 4 sections which need to be set by the user before running the script. 
 #
