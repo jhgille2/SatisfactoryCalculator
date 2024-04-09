@@ -103,19 +103,21 @@ tar_plan(
   
   # Component names to produce (set each equal to 0), 
   tar_target(Opt_products, 
-             c("Desc_NuclearFuelRod_C"  = 0)), 
+             c("Desc_SpaceElevatorPart_1_C" = 0,
+               "Desc_SpaceElevatorPart_2_C" = 0,
+               "Desc_SpaceElevatorPart_3_C" = 0)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
-             c("Desc_OreBauxite_C" = -10000, 
-               "Desc_Coal_C"       = -10000,
-               "Desc_RawQuartz_C"  = -10000,
-               "Desc_OreIron_C"    = -10000, 
-               "Desc_OreCopper_C"  = -10000,
-               "Desc_OreGold_C"    = -10000,
-               "Desc_Stone_C"      = -10000,
-               "Desc_Sulfur_C"     = -10000,
-               "Desc_OreUranium_C" = -300,
+             c(#"Desc_OreBauxite_C" = -10000, 
+               "Desc_Coal_C"       = -660,
+               #"Desc_RawQuartz_C"  = -10000,
+               "Desc_OreIron_C"    = -720, 
+               "Desc_OreCopper_C"  = -210,
+               #"Desc_OreGold_C"    = -10000,
+               "Desc_Stone_C"      = -240,
+               #"Desc_Sulfur_C"     = -10000,
+               #"Desc_OreUranium_C" = -300,
                "Desc_Water_C"      = -9007199254740991)),
   
   # Use binary search to try to find a factory that....
@@ -126,11 +128,30 @@ tar_plan(
              factory_binary_search_continuous(Opt_products, 
                                               current_recipes, 
                                               available_resources, 
-                                              req_amt = c(100), 
-                                              max_rate = 500,   # Starting upper bound for the the search space of production rates
-                                              whole_number_factories = FALSE)),
+                                              req_amt = c(500, 500, 100), 
+                                              max_rate = 50000,   # Starting upper bound for the the search space of production rates
+                                              whole_number_factories = TRUE)),
   
   # Clean up the output into a format that's ready for plotting in cytoscape
+  # To open in cytoscape: 
+  # 1. Start cytoscape
+  # 2. Test connection by running: RCy3::cytoscapePing()
+  #    in the console
+  # 3. Run RCy3::createNetworkFromIgraph(tar_read(CytoscapeReady_binary))
+  #    in the console to open the network in cytoscape and customize.
+  #
+  # Network notes for future me: 
+  # The yFiles orthogonal edge router layout
+  # does a good job of placing/clustering nodes in a layout that makes sense
+  # for organizing factories (minimizes edge overlaps).
+  #
+  # Use the "Curved" style. This should work right away but if not...
+  # * edge labels from the "flow" column
+  # * Node fill color from "producedIn", Mapping type: discrete, use whatever
+  #   color assignment you like
+  # * Node name from "name" col (duh)
+  # * Node size from "nFactories" w/continuous mapping. Adjust till it looks nice
+  # * Adding in a legend w/the extension doesn't hurt
   tar_target(CytoscapeReady_binary,
              clean_binary_lp_results(lp_result   = binary_LP_result, 
                                      recipeData  = current_recipes$data_frame, 

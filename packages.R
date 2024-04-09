@@ -26,4 +26,5 @@ pacman::p_load(dplyr,
                visNetwork)
 
 conflict_prefer("filter", "dplyr")
+conflicts_prefer(purrr::set_names)
 

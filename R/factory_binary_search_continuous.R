@@ -59,12 +59,12 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   failing_upper_boundry <- upper_boundry
   
   lower_product_rates <- (amt_ratios * lower_boundry) %>% 
-    set_names(names(Opt_products))
+    purrr::set_names(names(Opt_products))
   
   upper_poduct_rates <- (amt_ratios * upper_boundry) %>% 
-    set_names(names(Opt_products))
+    purrr::set_names(names(Opt_products))
   
-  while(run < 150 & upper_boundry_delta > delta_lim){
+  while(run < 550 & upper_boundry_delta > delta_lim){
     
     if(run == 0){
       # Solve the minimum and maximum parameter combinations
@@ -118,10 +118,10 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
       }
     }
     
-    # Update boundries 
+    # Update boundaries 
     if(max_status == 2){       # If failure...
       
-      # Decrease the upper boundry by half the range between the upper and lower boundaries
+      # Decrease the upper boundary by half the range between the upper and lower boundaries
       failing_upper_boundry <- upper_boundry
       upper_boundry         <- upper_boundry - ((upper_boundry - lower_boundry)/2)
       
@@ -129,8 +129,8 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
       
     }else if(max_status == 0){ # If success...
       
-      # Increase the upper boundry by half the range between the upper and lower boundaries
-      # and set the lower boundry to the current upper boundry
+      # Increase the upper boundary by half the range between the upper and lower boundaries
+      # and set the lower boundary to the current upper boundry
       old_upper_boundry <- upper_boundry
       upper_boundry     <- upper_boundry + ((failing_upper_boundry - upper_boundry)/2)
       lower_boundry     <- old_upper_boundry
@@ -144,18 +144,17 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
     
     # Update rates from new boundaries
     lower_product_rates <- (amt_ratios * lower_boundry) %>% 
-      set_names(names(Opt_products))
+      purrr::set_names(names(Opt_products))
     
     upper_poduct_rates <- (amt_ratios * upper_boundry) %>% 
-      set_names(names(Opt_products))
+      purrr::set_names(names(Opt_products))
     
   }
   
   # Set names of the solution to the appropriate recipe names
   min_soln$solution <- min_soln$solution %>% 
-    set_names(colnames(recipe_matrix))
+    purrr::set_names(colnames(recipe_matrix))
   
-  # Return the max solution
+  # Return the min solution
   min_soln
-  
 }
