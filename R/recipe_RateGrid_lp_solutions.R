@@ -40,7 +40,7 @@ recipe_lp_base <- function(startingResources = available_resources,
   
   objective_indices <- match(product_longnames, colnames(recipeMatrix))
 
-  ##### THIS NEEDS A LOT OF WORK #####
+  ##### THIS NEEDS WORK #####
   # A (dumb) objective function with coefficients of 1 for each 
   # desired product and 0 for everything else. 
   objectiveVec <- rep(0, ncol(recipeMatrix))
@@ -58,7 +58,7 @@ recipe_lp_base <- function(startingResources = available_resources,
 
 # This function solves a grid of linear programs where the grid is defined by
 # different combinations of minimum constraints for the desired product
-# components
+# components - This function sucks. Use the binary search one instead
 recipe_lp_rate_grid <- function(startingResources = available_resources,
                                 products = Opt_products, recipeData =
                                   RecipeData$NoAlternates, recipeGraph =
