@@ -15,7 +15,8 @@ lapply(list.files("./R", full.names = TRUE), source)
 #
 # I thought this optimization in particular could be useful because it would
 # let you design a factory that would reach some milestone production goal
-# the fastest.
+# the fastest under the constraints of what resources you have available
+# or are otherwise willing to commit to some objective.
 # 
 # I have set it up so that the optimization is relatively automated but 
 # it is still not intuitive what inputs should go where in the script. 
@@ -123,19 +124,19 @@ tar_plan(
   #    amount that are required
   # b) Uses all available resources
   tar_target(binary_LP_result, 
-             factory_binary_search_continuous(Opt_products, 
-                                              current_recipes, 
-                                              available_resources, 
-                                              req_amt = c(500, 500, 100), 
-                                              max_rate = 50000,   # Starting upper bound for the the search space of production rates
-                                              whole_number_factories = FALSE)),
+             factory_binary_search_continuous(Opt_products,                     # DON'T CHANGE THIS
+                                              current_recipes,                  # DON'T CHANGE THIS
+                                              available_resources,              # DON'T CHANGE THIS
+                                              req_amt = c(500, 500, 100),       # How much of each product is required. Same order as Opt_products list
+                                              max_rate = 50000,                 # Starting upper bound for the the search space of production rates
+                                              whole_number_factories = FALSE)), # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
+                                                                                # Likely, you will produce extra intermediate components if this is set to TRUE
   
   # Clean up the output into a format that's ready for plotting in cytoscape
   # To open in cytoscape: 
   # 1. Start cytoscape
-  # 2. Test connection by running: RCy3::cytoscapePing()
-  #    in the console
-  # 3. Run RCy3::createNetworkFromIgraph(tar_read(CytoscapeReady_binary))
+  # 2. Test connection by running: 'RCy3::cytoscapePing()' in the console
+  # 3. Run 'RCy3::createNetworkFromIgraph(tar_read(CytoscapeReady_binary))'
   #    in the console to open the network in cytoscape and customize.
   #
   # Network notes for future me: 
