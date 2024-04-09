@@ -80,21 +80,27 @@ get_recipe_data <- function(url = Recipe_url) {
   
   # Identify recipes that produce an item they consume
   # These mess with the LP solver
+  # Replace the explicit rates with the net rate of each item
   problem_recipes <- Recipe_Edgelist_Clean %>% 
     filter(ingredient_item == product_item)
   
-  # Fix these recipes so that the item consumption rate is equal to the
-  # net rate
-  problem_recipes <- Recipe_Edgelist_Clean %>% 
-    filter(slug %in% problem_recipes$slug, 
-           product_item %in% problem_recipes$product_item) %>% 
-    mutate(ingredient_per_minute = ingredient_per_minute - product_per_minute, 
-           product_per_minute = NA)
+  fixed_recipes <-  Recipe_Edgelist_Clean %>% 
+    filter(slug %in% problem_recipes$slug, !(product_item %in% problem_recipes$product_item))
+  
+  new_rates <- problem_recipes %>% 
+    mutate(ingredient_per_minute = ingredient_per_minute - product_per_minute) %>% 
+    select(ingredient_item, slug, ingredient_per_minute) %>% 
+    rename(new_ingredient_rate = ingredient_per_minute)
+  
+  fixed_recipes <- left_join(fixed_recipes, new_rates, by = c("ingredient_item", "slug")) %>% 
+    mutate(ingredient_per_minute = ifelse(!is.na(new_ingredient_rate), new_ingredient_rate, ingredient_per_minute)) %>%
+    select(-new_ingredient_rate)
+  
   
   # And add these fixed recipes back to the full recipe list
   Recipe_Edgelist_Clean %<>% 
-    filter(!(slug %in% problem_recipes$slug & product_item %in% problem_recipes$product_item)) %>%
-    dplyr::bind_rows(problem_recipes)
+    filter(!(slug %in% problem_recipes$slug)) %>%
+    dplyr::bind_rows(fixed_recipes)
   
   # Recipe_Edgelist <- AllRecipes %>% 
   #   select(ingredients, products, name, slug, producedIn, time)

@@ -103,18 +103,20 @@ tar_plan(
   
   # Component names to produce (set each equal to 0), 
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_3_C" = 0, 
-               "Desc_SteelPlateReinforced_C" = 0)), 
+             c("Desc_NuclearFuelRod_C"  = 0)), 
   
   # Provide available resources (negative values)
   tar_target(available_resources, 
-             c("Desc_OreCopper_C" = -240, 
-               "Desc_OreIron_C"   = -480, 
-               "Desc_Coal_C"      = -240,
-               "Desc_Stone_C"     = -480,
-               "Desc_LiquidOil_C" = -2200,
-               "Desc_RawQuartz_C" = -2200,
-               "Desc_Water_C"     = -9007199254740991)),
+             c("Desc_OreBauxite_C" = -10000, 
+               "Desc_Coal_C"       = -10000,
+               "Desc_RawQuartz_C"  = -10000,
+               "Desc_OreIron_C"    = -10000, 
+               "Desc_OreCopper_C"  = -10000,
+               "Desc_OreGold_C"    = -10000,
+               "Desc_Stone_C"      = -10000,
+               "Desc_Sulfur_C"     = -10000,
+               "Desc_OreUranium_C" = -300,
+               "Desc_Water_C"      = -9007199254740991)),
   
   # Use binary search to try to find a factory that....
   # a) Produces the desired products at rates proportional to the 
@@ -124,8 +126,9 @@ tar_plan(
              factory_binary_search_continuous(Opt_products, 
                                               current_recipes, 
                                               available_resources, 
-                                              req_amt = c(1, 1), 
-                                              max_rate = 5)), # Starting upper bound for the the search space of production rates
+                                              req_amt = c(100), 
+                                              max_rate = 500,   # Starting upper bound for the the search space of production rates
+                                              whole_number_factories = FALSE)),
   
   # Clean up the output into a format that's ready for plotting in cytoscape
   tar_target(CytoscapeReady_binary,
