@@ -1,14 +1,14 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 .pbd_env|object|b6903d0438660e67|||||||||||||||
 available_alternate_recipes|stem|7675c80b59ca7a4a|9691588b031dffa0|a3dad144c40657ed|-1323845219||t19424.0548056916s|3bd8f66805fd112b|45|rds|local|vector|||0||
-available_resources|stem|d99fa28ef77d036f|98db09e5e058d7a4|d5952a468c1d9178|-1802490998||t19822.0490518488s|7af061f2ef9eeab5|151|rds|local|vector|||0||
-binary_LP_result|stem|1c77491acbffb994|cbdd40bb8331d513|8a934eed2307a65b|1981167809||t19822.0514248793s|03cbf1bf7d77fc98|1053|rds|local|vector|||3.17||
+available_resources|stem|d99fa28ef77d036f|98db09e5e058d7a4|d5952a468c1d9178|-1802490998||t19822.0650800096s|7af061f2ef9eeab5|151|rds|local|vector|||0||
+binary_LP_result|stem|d01c65bd8c30f240|7b5ac1900ee25634|8a934eed2307a65b|1981167809||t19822.0659179599s|e3ddbc22b5f343b2|1108|rds|local|vector|||1.04||
 clean_binary_lp_results|function|ab3c8699a90f8da6|||||||||||||||
 clean_constrained_lp_results|function|5d496f11753f2e80|||||||||||||||
 clean_lp_results|function|226e9577882ef0a9|||||||||||||||
 current_recipe_matrix|stem|3dc418151d01a0f7|6f8bcf6d2a41f1d0|a172f633aa25ce25|-150660102||t19822.0354226632s|184fe38323c549c8|559|rds|local|vector|||0.15||
 current_recipes|stem|d5e53b98570217e5|e5c46855e056b7f1|5a7b426860f16d3e|1052339811||t19426.9040416559s|a7f711c0b5fe8798|11290|rds|local|vector|||0||
-CytoscapeReady_binary|stem|61243016966ea63b|65d20692ed913ec4|14922158542fda7d|1112372048||t19822.0514303539s|6208ff2ce674ceef|1221|rds|local|vector|||0.42||
+CytoscapeReady_binary|stem|6b83b0517a754117|65d20692ed913ec4|53607597919a9282|1112372048||t19822.0659200125s|7cdf844210ce909b|1615|rds|local|vector|||0.12||
 factory_binary_search|function|9e8657dc53ac49d0|||||||||||||||
 factory_binary_search_continuous|function|23d3dc510fb02b9d|||||||||||||||
 get_recipe_data|function|86820378605682be|||||||||||||||

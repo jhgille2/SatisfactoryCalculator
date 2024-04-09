@@ -44,8 +44,7 @@ lapply(list.files("./R", full.names = TRUE), source)
 # it's a leftover from the old solver that I still need to fix
 # 
 # Example: If you want to make rotors and reinforced iron plates, you could set this to 
-# c("Desc_Rotor_C" = 50, "Desc_IronPlateReinforced_C" = 50) which means that you want the solver to search for factories
-# that will produce rotors and reinforced iron plates at some rate between >0 and 50 per minute. 
+# c("Desc_Rotor_C" = 50, "Desc_IronPlateReinforced_C" = 50) 
 #
 # Next, provide your available resources in the same format as the desired products. 
 # make sure each available resource is negative. 
@@ -56,17 +55,16 @@ lapply(list.files("./R", full.names = TRUE), source)
 # Finally, in the LP result target, you need to set two arguments in the factory_binary_search
 # function: 
 #
-# 1. reqAmt: I made this calculator to find the factory that would reach some milestone
-# the fastest. That is equivalent to finding the factory that produces some set of items
+# 1. reqAmt: I made this calculator to find the factory that produces some set of items
 # at a rate relative to one another that is proportional to the amounts of each item that
-# is required for the objective. If you are using the script to complete the objective, 
+# is required for the objective. If you are using the script to complete an objective, 
 # it makes sense to set this argument equal to the number of each product that is required for the objective, 
 # enter these numbers in the same order the product names appear in the Opt_products step. 
 #
 # 2. max_rate: This controls the maximum rate of production of the product with the SMALLEST REQUIRED AMOUNT that 
 # the solver will try to find a solution for. Until very VERY late game you'll be fine setting this to 20 or less. 
 # If you do end up with a solution that is maxing out the production without consuming all the resources you have, 
-# just increase this
+# just increase this. You can also set it to some very large number and you should be fine.
 
 
 ## Section: Targets plan - Begin control script
@@ -130,7 +128,7 @@ tar_plan(
                                               available_resources, 
                                               req_amt = c(500, 500, 100), 
                                               max_rate = 50000,   # Starting upper bound for the the search space of production rates
-                                              whole_number_factories = TRUE)),
+                                              whole_number_factories = FALSE)),
   
   # Clean up the output into a format that's ready for plotting in cytoscape
   # To open in cytoscape: 

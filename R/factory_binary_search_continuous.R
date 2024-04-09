@@ -51,7 +51,7 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   
   run <- 0
   
-  # Ratios of required amounts relative to the maximum required amount
+  # Ratios of required amounts relative to the minimum required amount
   amt_ratios <- req_amt/min(req_amt)
   
   upper_boundry <- max_rate
@@ -114,7 +114,7 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
     if(run == 0){
       if(min_soln$status == 2){
         print("No solution possible")
-        break
+        return(NULL)
       }
     }
     
