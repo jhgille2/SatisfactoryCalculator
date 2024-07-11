@@ -69,8 +69,7 @@ lapply(list.files("./R", full.names = TRUE), source)
 #
 # 2. max_rate: This controls the maximum rate of production of the product with the SMALLEST REQUIRED AMOUNT that 
 # the solver will try to find a solution for. Until very VERY late game you'll be fine setting this to 20 or less. 
-# If you do end up with a solution that is maxing out the production without consuming all the resources you have, 
-# just increase this. You can also set it to some very large number and you should be fine.
+# UPDATE: You can probably set this to any reasonable rate and you'll be fine with the current function. 
 
 
 ## Section: Targets plan - Begin control script
