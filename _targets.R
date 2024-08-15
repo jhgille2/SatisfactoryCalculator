@@ -57,7 +57,7 @@ lapply(list.files("./R", full.names = TRUE), source)
 # Example: If you have 120 iron ore and 60 copper available, this would be set to  
 # c("Desc_OreCopper_C" = -60, "Desc_OreIron_C"   = -120)
 #
-# Finally, in the LP result target, you need to set two arguments in the factory_binary_search
+# Finally, in the LP result target, you need to set one argument in the factory_binary_search
 # function: 
 #
 # 1. reqAmt: I made this calculator to find the factory that produces some set of items
@@ -66,10 +66,7 @@ lapply(list.files("./R", full.names = TRUE), source)
 # it makes sense to set this argument equal to the number of each product that is required for the objective.
 # Otherwise, you can enter numbers so that they reflect how much more of some component you want relative to the others.
 # Enter these numbers in the same order the product names appear in the Opt_products step. 
-#
-# 2. max_rate: This controls the maximum rate of production of the product with the SMALLEST REQUIRED AMOUNT that 
-# the solver will try to find a solution for. Until very VERY late game you'll be fine setting this to 20 or less. 
-# UPDATE: You can probably set this to any reasonable rate and you'll be fine with the current function. 
+
 
 
 ## Section: Targets plan - Begin control script
@@ -133,7 +130,7 @@ tar_plan(
                                               current_recipes,                  # DON'T CHANGE THIS
                                               available_resources,              # DON'T CHANGE THIS
                                               req_amt = c(500, 500, 100),       # How much of each product is required. Same order as Opt_products list
-                                             # max_rate = 1,                     # Starting upper bound for the the search space of production rates
+                                             # max_rate = 1,                    # Starting upper bound for the the search space of production rates
                                               whole_number_factories = FALSE)), # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
                                                                                 # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
                                                                                 # though that it's probably best to keep this to FALSE, just remember not to panic when a result tells you to make 
@@ -170,5 +167,11 @@ tar_plan(
              make_recipeMatrix(names(Opt_products), 
                                current_recipes$graph, 
                                current_recipes$data_frame, 
-                               "component"))
+                               "component")), 
+  
+  # A function to find the limiting resource
+  tar_target(resource_consumption,
+             find_limiting_resource(current_recipe_matrix,
+                                    binary_LP_result,
+                                    available_resources))
 )

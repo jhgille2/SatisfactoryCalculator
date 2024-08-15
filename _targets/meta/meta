@@ -11,6 +11,7 @@ current_recipes|stem|d5e53b98570217e5|e5c46855e056b7f1|5a7b426860f16d3e|10523398
 CytoscapeReady_binary|stem|dccad83d231fd393|65d20692ed913ec4|479452276d800e27|1112372048||t19950.0340966812s|b4eac813167f17ea|1601|rds|local|vector|||0.14||
 factory_binary_search|function|9e8657dc53ac49d0|||||||||||||||
 factory_binary_search_continuous|function|e060820c6c1a5386|||||||||||||||
+find_limiting_resource|function|858f173e77a73576|||||||||||||||
 get_recipe_data|function|86820378605682be|||||||||||||||
 make_current_recipes|function|4b9937dd68da9f08|||||||||||||||
 make_flowcharts|function|f36716b7a96e702d|||||||||||||||
@@ -24,3 +25,4 @@ recipe_lp_grid_solutions|function|5ac52bf96dcfdcb0|||||||||||||||
 recipe_lp_rate_grid|function|247610d5f3669268|||||||||||||||
 Recipe_url|stem|e0e530e3c2976eb5|68903fe4d19da187|ef46db3751d8e999|741281539|https://raw.githubusercontent.com/greeny/SatisfactoryTools/dev/data/data.json|t19950.0116443999s||0|url|local|vector|||0||
 RecipeData|stem|6fe2d9c68a506390|0bdb6799a0111469|71f7a4a14afd7908|1295487169||t19426.9040410309s|6e369e4a33d385c9|31405|rds|local|vector|||0.69||
+resource_consumption|stem|216ba0a9e727d4ee|efc508c330e8abf6|955469fe9ce49d8a|-1803052699||t19950.0655045751s|655903f9b31c339f|135|rds|local|vector|||0||
