@@ -40,7 +40,7 @@ recipe_lp_grid_solutions <- function(startingResources = available_resources,
   for(i in 1:length(products)){
     
     currentRes            <- which(rownames(recipeMatrix) ==  names(products)[[i]])
-    const_dir[currentRes] <- ">"
+    const_dir[currentRes] <- "="
     rhs[currentRes]       <- products[[i]]
     
   }

@@ -6,7 +6,7 @@
 ##################################################
 
 factory_binary_search_continuous <- function(Opt_products, current_recipes,
-                                             available_resources, req_amt = c(2500, 500), whole_number_factories = FALSE){
+                                             available_resources, req_amt = c(2500, 500), whole_number_factories = FALSE, slack = FALSE){
   
   # If only one product is needed, just maximize the production of that item
   if(length(Opt_products) == 1){
@@ -14,7 +14,8 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
                           Opt_products, 
                           recipeData = current_recipes$data_frame, 
                           recipeGraph = current_recipes$graph, 
-                          integerFactories = FALSE)
+                          integerFactories = FALSE,
+                          slack)
     
     return(res)
   }
@@ -75,20 +76,23 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
                                  startingResources = available_resources,
                                  recipeData        = current_recipes$data_frame, 
                                  recipeGraph       = current_recipes$graph, 
-                                 integerFactories  = whole_number_factories)
+                                 integerFactories  = whole_number_factories,
+                                 slack             = slack)
       
       max_soln <- recipe_lp_base(products          = upper_poduct_rates, 
                                  startingResources = available_resources,
                                  recipeData        = current_recipes$data_frame, 
                                  recipeGraph       = current_recipes$graph, 
-                                 integerFactories  = whole_number_factories)
+                                 integerFactories  = whole_number_factories,
+                                 slack             = slack)
     }else{
       if(max_status == 2){
         max_soln <- recipe_lp_base(products          = upper_poduct_rates, 
                                    startingResources = available_resources,
                                    recipeData        = current_recipes$data_frame, 
                                    recipeGraph       = current_recipes$graph, 
-                                   integerFactories  = whole_number_factories)
+                                   integerFactories  = whole_number_factories,
+                                   slack             = slack)
       }else{
         min_soln <- max_soln
         
@@ -96,7 +100,8 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
                                    startingResources = available_resources,
                                    recipeData        = current_recipes$data_frame, 
                                    recipeGraph       = current_recipes$graph, 
-                                   integerFactories  = whole_number_factories)
+                                   integerFactories  = whole_number_factories,
+                                   slack             = slack)
       }
     }
 

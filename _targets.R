@@ -124,17 +124,18 @@ tar_plan(
   # Use binary search to try to find a factory that....
   # a) Produces the desired products at rates proportional to the 
   #    amount that are required
-  # b) Uses all available resources
+  # b) Uses resources up until all of at least one available resource is consumed
   tar_target(binary_LP_result, 
              factory_binary_search_continuous(Opt_products,                     # DON'T CHANGE THIS
                                               current_recipes,                  # DON'T CHANGE THIS
                                               available_resources,              # DON'T CHANGE THIS
-                                              req_amt = c(500, 500, 100),       # How much of each product is required. Same order as Opt_products list
+                                              req_amt = c(100, 100, 100),       # How much of each product is required. Same order as Opt_products list
                                              # max_rate = 1,                    # Starting upper bound for the the search space of production rates
-                                              whole_number_factories = FALSE)), # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
-                                                                                # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
+                                              whole_number_factories = FALSE,   # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
+                                              slack = FALSE)),                  # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
                                                                                 # though that it's probably best to keep this to FALSE, just remember not to panic when a result tells you to make 
                                                                                 # 1/8th of a factory or something
+                                                                                
   
   # Clean up the output into a format that's ready for plotting in cytoscape
   # To open in cytoscape: 

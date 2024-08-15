@@ -2,7 +2,8 @@ recipe_lp_base <- function(startingResources = available_resources,
                            products = Opt_products, recipeData =
                              RecipeData$NoAlternates, recipeGraph =
                              RecipeGraphs$NoAlternates, integerFactories =
-                             TRUE) {
+                             TRUE,
+                            slack = FALSE) {
   
   # Make a matrix of consumption/production rates. Recipes as columns, 
   # components in rows
@@ -22,12 +23,17 @@ recipe_lp_base <- function(startingResources = available_resources,
   
   # Insist that net flow of heavy oil residue must equal zero
   # (it's practically useless (?))
+  # Alternatively, it will need to be sinked by the user.
   if("Desc_HeavyOilResidue_C" %in% rownames(recipeMatrix)){
     const_dir[which(rownames(recipeMatrix) == "Desc_HeavyOilResidue_C")] <- "="
   }
   
   # Set minimum production rates for products
-  const_dir[match(names(products), rownames(recipeMatrix))] <- ">"
+  if(slack){
+    const_dir[match(names(products), rownames(recipeMatrix))] <- ">"
+  }else{
+    const_dir[match(names(products), rownames(recipeMatrix))] <- "="
+  }
   rhs[match(names(products), rownames(recipeMatrix))] <- products
   rhs <- as.numeric(rhs)
   
@@ -40,8 +46,7 @@ recipe_lp_base <- function(startingResources = available_resources,
   
   objective_indices <- match(product_longnames, colnames(recipeMatrix))
 
-  ##### THIS NEEDS WORK #####
-  # A (dumb) objective function with coefficients of 1 for each 
+  # A (dummy) objective function with coefficients of 1 for each 
   # desired product and 0 for everything else. 
   objectiveVec <- rep(0, ncol(recipeMatrix))
   objectiveVec[objective_indices] <- 1
