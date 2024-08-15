@@ -107,6 +107,7 @@ tar_plan(
                "Desc_SpaceElevatorPart_3_C" = 0)), 
   
   # Provide available resources (negative values)
+  # Leave resources commented out if you don't have access to them yet
   tar_target(available_resources, 
              c(#"Desc_OreBauxite_C" = -10000, 
                "Desc_Coal_C"       = -660,
@@ -128,7 +129,7 @@ tar_plan(
                                               current_recipes,                  # DON'T CHANGE THIS
                                               available_resources,              # DON'T CHANGE THIS
                                               req_amt = c(500, 500, 100),       # How much of each product is required. Same order as Opt_products list
-                                              max_rate = 50000,                 # Starting upper bound for the the search space of production rates
+                                             # max_rate = 1,                     # Starting upper bound for the the search space of production rates
                                               whole_number_factories = FALSE)), # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
                                                                                 # Likely, you will produce extra intermediate components if this is set to TRUE
   

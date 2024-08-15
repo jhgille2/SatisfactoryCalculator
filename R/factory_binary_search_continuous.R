@@ -6,7 +6,7 @@
 ##################################################
 
 factory_binary_search_continuous <- function(Opt_products, current_recipes,
-                                             available_resources, req_amt = c(2500, 500), max_rate = 50, whole_number_factories = FALSE){
+                                             available_resources, req_amt = c(2500, 500), whole_number_factories = FALSE){
   
   # If only one product is needed, just maximize the production of that item
   if(length(Opt_products) == 1){
@@ -47,9 +47,12 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   
   current_best_soln <- NA
   
-  delta_lim <- 0.0001
+  delta_lim <- 0.000001
+  
+  max_rate <- 1
   
   run <- 0
+  belowFailing <- TRUE
   
   # Ratios of required amounts relative to the minimum required amount
   amt_ratios <- req_amt/min(req_amt)
@@ -121,6 +124,8 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
     # Update boundaries 
     if(max_status == 2){       # If failure...
       
+      belowFailing <- FALSE
+      
       # Decrease the upper boundary by half the range between the upper and lower boundaries
       failing_upper_boundry <- upper_boundry
       upper_boundry         <- upper_boundry - ((upper_boundry - lower_boundry)/2)
@@ -132,15 +137,24 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
       # Increase the upper boundary by half the range between the upper and lower boundaries
       # and set the lower boundary to the current upper boundry
       old_upper_boundry <- upper_boundry
-      upper_boundry     <- upper_boundry + ((failing_upper_boundry - upper_boundry)/2)
-      lower_boundry     <- old_upper_boundry
       
+      if(belowFailing){
+        failing_upper_boundry <- failing_upper_boundry * 2
+        upper_boundry <- upper_boundry + ((failing_upper_boundry - upper_boundry)/2)
+      }else{
+        upper_boundry <- upper_boundry + ((failing_upper_boundry - upper_boundry)/2)
+      }
+      
+      lower_boundry       <- old_upper_boundry
       upper_boundry_delta <- abs(upper_boundry - old_upper_boundry)
       
     }
     
     # Increment the run counter
     run <- run + 1
+    print(paste("run", run))
+    print(paste("upper boundry", upper_boundry))
+    print(paste("lower boundry", lower_boundry))
     
     # Update rates from new boundaries
     lower_product_rates <- (amt_ratios * lower_boundry) %>% 
