@@ -23,7 +23,8 @@ recipe_lp_base <- function(startingResources = available_resources,
   
   # Insist that net flow of heavy oil residue must equal zero
   # (it's practically useless (?))
-  # Alternatively, it will need to be sinked by the user.
+  # Alternatively, it will need to be sinked by the user. Maybe add an option to 
+  # let a solution have excess residue.
   if("Desc_HeavyOilResidue_C" %in% rownames(recipeMatrix)){
     const_dir[which(rownames(recipeMatrix) == "Desc_HeavyOilResidue_C")] <- "="
   }
