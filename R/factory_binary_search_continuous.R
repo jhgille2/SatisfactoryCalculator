@@ -48,7 +48,7 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   
   current_best_soln <- NA
   
-  delta_lim <- 0.000001
+  delta_lim <- 0.00000001
   
   max_rate <- 1
   
@@ -65,8 +65,12 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
   lower_product_rates <- (amt_ratios * lower_boundry) %>% 
     purrr::set_names(names(Opt_products))
   
+  lower_product_rate_list <- vector("list", 1000)
+  
   upper_poduct_rates <- (amt_ratios * upper_boundry) %>% 
     purrr::set_names(names(Opt_products))
+  
+  upper_product_rate_list <- vector("list", 1000)
   
   while(run < 550 & upper_boundry_delta > delta_lim){
     
@@ -157,9 +161,9 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
     
     # Increment the run counter
     run <- run + 1
-    print(paste("run", run))
-    print(paste("upper boundry", upper_boundry))
-    print(paste("lower boundry", lower_boundry))
+    # print(paste("run", run))
+    # print(paste("upper boundry", upper_boundry))
+    # print(paste("lower boundry", lower_boundry))
     
     # Update rates from new boundaries
     lower_product_rates <- (amt_ratios * lower_boundry) %>% 
