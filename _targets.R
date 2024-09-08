@@ -128,6 +128,7 @@ tar_plan(
                #"Desc_Sulfur_C"     = -10000,
                #"Desc_OreUranium_C" = -300,
                "Desc_Water_C"      = -9007199254740991)), # -9007199254740991 is the total amount of available water on the map. Change if 
+                                                          # water is limiting and you have a better idea about how much you can access
   
   # Use binary search to try to find a factory that....
   # a) Produces the desired products at rates proportional to the 
