@@ -138,10 +138,10 @@ tar_plan(
              factory_binary_search_continuous(Opt_products,                     # DON'T CHANGE THIS
                                               current_recipes,                  # DON'T CHANGE THIS
                                               available_resources,              # DON'T CHANGE THIS
-                                              req_amt = c(500, 500, 100),       # How much of each product is required. Same order as Opt_products list
+                                              req_amt = c(500, 250, 125),       # How much of each product is required. Same order as Opt_products list
                                              # max_rate = 1,                    # Starting upper bound for the the search space of production rates
                                               whole_number_factories = FALSE,   # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
-                                              slack = FALSE)),                  # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
+                                              slack = TRUE)),                  # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
                                                                                 # though that it's probably best to keep this to FALSE, just remember not to panic when a result tells you to make 
                                                                                 # 1/8th of a factory or something
                                                                                 # If slack = FALSE, the solution will try to find a factory that makes products in exactly the rate ratios you indicate
@@ -169,7 +169,7 @@ tar_plan(
   # * Node size from "nFactories" w/continuous mapping. Adjust till it looks nice
   # * Adding in a legend w/the extension doesn't hurt
   tar_target(CytoscapeReady_binary,
-             clean_binary_lp_results(lp_result   = binary_LP_result, 
+             clean_binary_lp_results(lp_result   = binary_LP_result$soln, 
                                      recipeData  = current_recipes$data_frame, 
                                      recipeGraph = current_recipes$graph, 
                                      products    = Opt_products)),
@@ -185,6 +185,6 @@ tar_plan(
   # A function to find the limiting resource
   tar_target(resource_consumption,
              find_limiting_resource(current_recipe_matrix,
-                                    binary_LP_result,
+                                    binary_LP_result$soln,
                                     available_resources))
 )

@@ -159,6 +159,7 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
       
     }
     
+    
     # Increment the run counter
     run <- run + 1
     # print(paste("run", run))
@@ -169,8 +170,12 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
     lower_product_rates <- (amt_ratios * lower_boundry) %>% 
       purrr::set_names(names(Opt_products))
     
+    lower_product_rate_list[[run]] <- lower_product_rates
+    
     upper_poduct_rates <- (amt_ratios * upper_boundry) %>% 
       purrr::set_names(names(Opt_products))
+    
+    upper_product_rate_list[[run]] <- upper_poduct_rates
     
   }
   
@@ -179,5 +184,22 @@ factory_binary_search_continuous <- function(Opt_products, current_recipes,
     purrr::set_names(colnames(recipe_matrix))
   
   # Return the min solution
-  min_soln
+  # min_soln
+  
+  lower_rate_df <- lower_product_rate_list[!map_lgl(lower_product_rate_list, is.null)] %>%
+    purrr::reduce(bind_rows) %>%
+    mutate(boundry = "lower",
+           iteration = 1:n())
+  
+  upper_rate_df <- upper_product_rate_list[!map_lgl(upper_product_rate_list, is.null)] %>%
+    purrr::reduce(bind_rows) %>%
+    mutate(boundry = "upper",
+           iteration = 1:n())
+  
+  rate_df <- bind_rows(lower_rate_df, upper_rate_df)
+  
+  res <- list("soln" = min_soln,
+              "rate_df" = rate_df)
+  
+  return(res)
 }

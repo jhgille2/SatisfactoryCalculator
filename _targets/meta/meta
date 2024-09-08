@@ -2,7 +2,7 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 .pbd_env|object|aeeef01bff3ba26d|||||||||||||||
 available_alternate_recipes|stem|3e6d6a4dda60d6db|f28049a3833b5074|2c530c1562a7fbd1|-1652430120||t19974.9335679443s|d21be8cf0dd771ce|44|rds|local|vector|||0||
 available_resources|stem|e14a90cde913079b|c5efc7dbed954579|2c530c1562a7fbd1|-651886997||t19974.9337182473s|b6a3947d99208431|149|rds|local|vector|||0||
-binary_LP_result|stem|4974658b34c41a36|00769deb421dabd3|0c359eba2e701a53|-359291173||t19974.9671726952s|a67cde3029bafc7d|1112|rds|local|vector|||1.16||
+binary_LP_result|stem|9ed1300779624ebd|116d22a15bd5ab48|04d17cbcc044ab0c|-359291173||t19974.9863616888s|72965304f449ff65|1652|rds|local|vector|||1.17||
 clean_binary_lp_results|function|3ad6d83f4263ee25|||||||||||||||
 clean_constrained_lp_results|function|b5d16d11634f045f|||||||||||||||
 clean_lp_results|function|5eae8ee7f90c7187|||||||||||||||
@@ -11,7 +11,7 @@ current_recipe_matrix|stem|57975b4b4d1a3205|8c0f1a2455c01f8e|879951e3e6d41328|23
 current_recipes|stem|4bd04d4d3195ba10|6d15f1e027cc80ad|2ced9b66a47d942e|-1108372841||t19974.9463364091s|f1b7821a83b6126e|34848|rds|local|vector|||0||
 CytoscapeReady_binary|stem|125f0899908cc376|95748153afbb66c6|bc0cd7f91f0874df|433248720||t19974.9602372093s|b5d387cf61135816|1485|rds|local|vector|||0.14||
 factory_binary_search|function|71013c1b016cabe5|||||||||||||||
-factory_binary_search_continuous|function|e3c18ee4627abf9d|||||||||||||||
+factory_binary_search_continuous|function|ff331967b42790aa|||||||||||||||
 find_limiting_resource|function|923eb9103afd16fe|||||||||||||||
 get_recipe_data|function|7c108f842767c8a9|||||||||||||||
 make_current_recipes|function|d7c1bb17d0f714cc|||||||||||||||
