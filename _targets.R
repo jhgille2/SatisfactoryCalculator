@@ -7,6 +7,52 @@ source("./packages.R")
 ## Load your R files
 lapply(list.files("./R", full.names = TRUE), source)
 
+## Section: Pre-made product and quantity vectors 
+##################################################
+
+# Tier 3 buildings and approx quantities
+tier_3_buildings <- c("Desc_Cable_C" = 0,
+                      "Desc_Cement_C" = 0,
+                      "Desc_IronRod_C" = 0, 
+                      "Desc_ModularFrame_C" = 0,
+                      "Desc_Wire_C" = 0,
+                      "Desc_Rotor_C" = 0,
+                      "Desc_IronPlateReinforced_C" = 0,
+                      "Desc_SteelPlate_C" = 0,
+                      "Desc_IronPlate_C" = 0)
+
+tier_3_building_qty <- c(754,
+                         132.4,
+                         80,
+                         66.2,
+                         128,
+                         146.2,
+                         332.4,
+                         100,
+                         300)
+
+# Pre tier-3 buildings with quantities
+pre_tier_3_buildings <- c("Desc_Cable_C" = 0,
+                          "Desc_Cement_C" = 0,
+                          "Desc_IronRod_C" = 0, 
+                          # "Desc_ModularFrame_C" = 0,
+                          "Desc_Wire_C" = 0,
+                          "Desc_Rotor_C" = 0,
+                          "Desc_IronPlateReinforced_C" = 0,
+                          # "Desc_SteelPlate_C" = 0,
+                          "Desc_IronPlate_C" = 0)
+
+pre_tier_3_building_qty <- c(754,
+                             132.4,
+                             80,
+                             # 66.2,
+                             128,
+                             146.2,
+                             332.4,
+                             # 100,
+                             300)
+
+
 
 ## Section: INSTRUCTIONS
 ##################################################
@@ -111,9 +157,7 @@ tar_plan(
   
   # Component names to produce (set each equal to 0), 
   tar_target(Opt_products, 
-             c("Desc_SpaceElevatorPart_1_C" = 0,
-               "Desc_SpaceElevatorPart_2_C" = 0,
-               "Desc_SpaceElevatorPart_3_C" = 0)), 
+             tier_3_buildings), 
   
   # Provide available resources (negative values)
   # Leave resources commented out if you don't have access to them yet
@@ -138,10 +182,10 @@ tar_plan(
              factory_binary_search_continuous(Opt_products,                     # DON'T CHANGE THIS
                                               current_recipes,                  # DON'T CHANGE THIS
                                               available_resources,              # DON'T CHANGE THIS
-                                              req_amt = c(500, 250, 125),       # How much of each product is required. Same order as Opt_products list
+                                              req_amt = tier_3_building_qty,    # How much of each product is required. Same order as Opt_products list
                                              # max_rate = 1,                    # Starting upper bound for the the search space of production rates
                                               whole_number_factories = FALSE,   # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
-                                              slack = TRUE)),                  # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
+                                              slack = FALSE)),                  # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
                                                                                 # though that it's probably best to keep this to FALSE, just remember not to panic when a result tells you to make 
                                                                                 # 1/8th of a factory or something
                                                                                 # If slack = FALSE, the solution will try to find a factory that makes products in exactly the rate ratios you indicate

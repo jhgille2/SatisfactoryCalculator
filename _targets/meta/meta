@@ -2,14 +2,14 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iterat
 .pbd_env|object|aeeef01bff3ba26d|||||||||||||||
 available_alternate_recipes|stem|3e6d6a4dda60d6db|f28049a3833b5074|2c530c1562a7fbd1|-1652430120||t19974.9335679443s|d21be8cf0dd771ce|44|rds|local|vector|||0||
 available_resources|stem|e14a90cde913079b|c5efc7dbed954579|2c530c1562a7fbd1|-651886997||t19974.9337182473s|b6a3947d99208431|149|rds|local|vector|||0||
-binary_LP_result|stem|9ed1300779624ebd|116d22a15bd5ab48|04d17cbcc044ab0c|-359291173||t19974.9863616888s|72965304f449ff65|1652|rds|local|vector|||1.17||
+binary_LP_result|stem|ee09751a340063c2|b6dd02ce30d055f7|106b7780f1fe4c57|-359291173||t19975.9142816702s|777bebec812e12e0|3167|rds|local|vector|||1.56||
 clean_binary_lp_results|function|3ad6d83f4263ee25|||||||||||||||
 clean_constrained_lp_results|function|b5d16d11634f045f|||||||||||||||
 clean_lp_results|function|5eae8ee7f90c7187|||||||||||||||
 clean_recipe_json|function|83ea16a08aa9bf8a|||||||||||||||
-current_recipe_matrix|stem|57975b4b4d1a3205|8c0f1a2455c01f8e|879951e3e6d41328|230111091||t19974.9463476247s|1df264581949b9a4|558|rds|local|vector|||0.03||
+current_recipe_matrix|stem|705845e247f8746b|8c0f1a2455c01f8e|f48ca000fdccb690|230111091||t19975.9142827006s|dd0919b365604de3|454|rds|local|vector|||0.05||
 current_recipes|stem|4bd04d4d3195ba10|6d15f1e027cc80ad|2ced9b66a47d942e|-1108372841||t19974.9463364091s|f1b7821a83b6126e|34848|rds|local|vector|||0||
-CytoscapeReady_binary|stem|125f0899908cc376|95748153afbb66c6|bc0cd7f91f0874df|433248720||t19974.9602372093s|b5d387cf61135816|1485|rds|local|vector|||0.14||
+CytoscapeReady_binary|stem|1d3e55efb26e635a|eb9a94a342de10c6|5e7ea8b251a7375b|433248720||t19975.9142845984s|4bb723e5b63b7e71|1259|rds|local|vector|||0.14||
 factory_binary_search|function|71013c1b016cabe5|||||||||||||||
 factory_binary_search_continuous|function|ff331967b42790aa|||||||||||||||
 find_limiting_resource|function|923eb9103afd16fe|||||||||||||||
@@ -19,7 +19,9 @@ make_flowcharts|function|4ce8e876946ed105|||||||||||||||
 make_recipe_graphs|function|f25b664db152c865|||||||||||||||
 make_recipe_subsets|function|328aa2720bcba8ee|||||||||||||||
 make_recipeMatrix|function|817b5c0db4f25298|||||||||||||||
-Opt_products|stem|20ae4f54299b1d60|0e4138734a83d7cc|2c530c1562a7fbd1|-1682370466||t19974.9337217393s|f2de2469be356334|110|rds|local|vector|||0||
+Opt_products|stem|1017db7f0ee5e8a4|108dce393de9b282|c2dbbed6209ceb45|-1682370466||t19975.9142632902s|42e429e60361e54e|178|rds|local|vector|||0||
+pre_tier_3_building_qty|object|63d622cd30f7f743|||||||||||||||
+pre_tier_3_buildings|object|7f699cfb62eabc77|||||||||||||||
 recipe_constr_optim|function|f30e6a5add92632d|||||||||||||||
 recipe_json|stem|c10f738b78c203e6|a8bf8a572ed940b3|2c530c1562a7fbd1|1078359308|C:/Users/Jay/Documents/R/Projects/SatisfactoryCalculator/data/recipe_jsons/Docs_utf8.json|t19974.7367949678s|865374d2a4e56856|3287255|file|local|vector|||0||
 recipe_lp_base|function|20d884895aef59a4|||||||||||||||
@@ -28,4 +30,6 @@ recipe_lp_rate_grid|function|c5526839702ff850|||||||||||||||
 Recipe_url|stem|448dd93cc107e6ab|ad22990d3b1d2cba|2c530c1562a7fbd1|-1382658224|https://raw.githubusercontent.com/greeny/SatisfactoryTools/dev/data/data.json|t19974.9337217075s||0|url|local|vector|||0||
 RecipeData|stem|2ca5d73ee12da6c4|b3cbc02b4a5421d7|465f1d0ac7ae16ba|501322944||t19974.9337313669s|e3500a772426417e|31404|rds|local|vector|||0.78|Detected an unexpected manytomany relationship between x and y.ℹ Row 61 of x matches multiple rows in y.ℹ Row 1 of y matches multiple rows in x.ℹ If a manytomany relationship is expected, set relationship   manytomany to silence this warning.|
 RecipeData_json|stem|4df0adee3fcc69f7|3252de9f5137f3db|f19ecb0a9d83d1bb|-1899993508||t19974.9463357379s|34135e47d657f658|59914|rds|local|vector|||5.8||
-resource_consumption|stem|b7b5f3bb9c3207d5|c3d7b5aaada0b607|76cdca5116c43db0|-285683284||t19974.9602374408s|2dca0206e1e05083|135|rds|local|vector|||0||
+resource_consumption|stem|09484332547170b3|f43fed133ac4c08e|da8282409b57cd89|-285683284||t19975.9142847489s|2d8e656ac7732c01|153|rds|local|vector|||0||
+tier_3_building_qty|object|1ef2d6221e432dcc|||||||||||||||
+tier_3_buildings|object|c21989ae0c832632|||||||||||||||
