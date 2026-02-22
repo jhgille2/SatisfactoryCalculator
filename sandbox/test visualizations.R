@@ -2,6 +2,7 @@ library(ggplot2)
 library(ggthemes)
 library(ggrepel)
 
+tar_make(binary_LP_result)
 tar_load(binary_LP_result)
 
 
@@ -9,7 +10,7 @@ rates <- binary_LP_result$rate_df
 
 
 rates_long <- rates %>% 
-  pivot_longer(cols = 1:3)
+  pivot_longer(cols = 1:(ncol(.)-2))
 
 
 ggplot(rates_long, aes(group = name, colour = name, shape = boundry, x = iteration, y = value)) + 
@@ -20,5 +21,6 @@ ggplot(rates_long, aes(group = name, colour = name, shape = boundry, x = iterati
               dplyr::filter(boundry == "lower") %>% 
               group_by(name) %>% 
               slice_max(iteration, n = 1),
-            aes(label = round(value, 3), size = 2),
-            nudge_y = 1.5)
+            aes(label = round(value, 5), size = 2),
+            nudge_y = 1.5,
+            show.legend = FALSE)

@@ -3,7 +3,7 @@ if(!require(pacman)){
   install.packages("pacman")
 }
 
-# Use pacman to load/install packaged
+# Use pacman to load/install packages
 pacman::p_load(dplyr, 
                stringr,
                tidyr,
@@ -23,7 +23,15 @@ pacman::p_load(dplyr,
                here, 
                purrr, 
                tibble, 
-               visNetwork)
+               visNetwork,
+               ggplot2,
+               ggthemes,
+               ggrepel,
+               shiny,
+               shinydashboard,
+               RSQLite,
+               digest,
+               shinyjs)
 
 conflict_prefer("filter", "dplyr")
 conflicts_prefer(purrr::set_names)

@@ -11,15 +11,16 @@ lapply(list.files("./R", full.names = TRUE), source)
 ##################################################
 
 # Tier 3 buildings and approx quantities
-tier_3_buildings <- c("Desc_Cable_C" = 0,
-                      "Desc_Cement_C" = 0,
-                      "Desc_IronRod_C" = 0, 
-                      "Desc_ModularFrame_C" = 0,
-                      "Desc_Wire_C" = 0,
-                      "Desc_Rotor_C" = 0,
+tier_3_buildings <- c("Desc_Cable_C"               = 0,
+                      "Desc_Cement_C"              = 0,
+                      "Desc_IronRod_C"             = 0, 
+                      "Desc_ModularFrame_C"        = 0,
+                      "Desc_Wire_C"                = 0,
+                      "Desc_Rotor_C"               = 0,
                       "Desc_IronPlateReinforced_C" = 0,
-                      "Desc_SteelPlate_C" = 0,
-                      "Desc_IronPlate_C" = 0)
+                      "Desc_SteelPlate_C"          = 0,
+                      "Desc_SteelPipe_C"           = 0,
+                      "Desc_IronPlate_C"           = 0)
 
 tier_3_building_qty <- c(754,
                          132.4,
@@ -29,29 +30,35 @@ tier_3_building_qty <- c(754,
                          146.2,
                          332.4,
                          100,
+                         100,
                          300)
 
+
 # Pre tier-3 buildings with quantities
-pre_tier_3_buildings <- c("Desc_Cable_C" = 0,
-                          "Desc_Cement_C" = 0,
-                          "Desc_IronRod_C" = 0, 
-                          # "Desc_ModularFrame_C" = 0,
-                          "Desc_Wire_C" = 0,
-                          "Desc_Rotor_C" = 0,
-                          "Desc_IronPlateReinforced_C" = 0,
+pre_tier_3_buildings <- c(#"Desc_Cable_C"               = 0,
+                          #"Desc_Cement_C"              = 0,
+                          "Desc_IronRod_C"             = 0, 
+                          #"Desc_ModularFrame_C" = 0,
+                          "Desc_IronScrew_C" = 0,
+                          #"Desc_Wire_C"                = 0,
+                          #"Desc_Rotor_C"               = 0,
+                          #"Desc_IronPlateReinforced_C" = 0,
                           # "Desc_SteelPlate_C" = 0,
-                          "Desc_IronPlate_C" = 0)
+                          "Desc_IronPlate_C"           = 0)
+pre_tier_3_building_qty <- c(#754,
+                             #132.4,
+                             # 80,
+                             10,
+                            # 128,
+                             2,
+                             10)
+                            # 100,
+                             #300)
 
-pre_tier_3_building_qty <- c(754,
-                             132.4,
-                             80,
-                             # 66.2,
-                             128,
-                             146.2,
-                             332.4,
-                             # 100,
-                             300)
-
+basic_copper_qty   <- c(10, 5, 10)
+basic_copper_items <- c("Desc_Cable_C"               = 0,
+                        "Desc_Wire_C"                = 0,
+                        "Desc_CopperSheet_C"         = 0)
 
 
 ## Section: INSTRUCTIONS
@@ -125,26 +132,26 @@ tar_plan(
   ##################################################
 
   # The url to the recipe data (Greenys github repo)
-  tar_target(Recipe_url, 
-             "https://raw.githubusercontent.com/greeny/SatisfactoryTools/dev/data/data.json", 
-             format = "url"), 
+  # tar_target(Recipe_url, 
+  #            "https://raw.githubusercontent.com/greeny/SatisfactoryTools/dev/data/data.json", 
+  #            format = "url"), 
   
   # A file that has the recipe data from the game files
   tar_file(recipe_json, 
-           here::here("data", "recipe_jsons", "Docs_utf8.json")),
+           here::here("data", "recipe_jsons", "en-US_utf8.json")),
   
   # Clean up the recipe data from the recipe json
   tar_target(RecipeData_json,
              clean_recipe_json(recipe_json)),
   
   # Download the data from the url
-   tar_target(RecipeData,
-              get_recipe_data(url = Recipe_url)),
+   # tar_target(RecipeData,
+   #            get_recipe_data(url = Recipe_url)),
   
   # The names of the alternative recipes you've unlocked
   # Set to c(NULL) if none have been unlocked
   tar_target(available_alternate_recipes, 
-             c(NULL)),
+             c("alternate:-iron-wire")),
   
   # Make a list holding the current recipe table and its associated graph
   # from the alternate recipes that have been unlocked
@@ -157,20 +164,22 @@ tar_plan(
   
   # Component names to produce (set each equal to 0), 
   tar_target(Opt_products, 
-             tier_3_buildings), 
+             c("Desc_SpaceElevatorPart_2_C" = 0,
+               "Desc_SpaceElevatorPart_3_C" = 0)), 
   
   # Provide available resources (negative values)
   # Leave resources commented out if you don't have access to them yet
   tar_target(available_resources, 
-             c(#"Desc_OreBauxite_C" = -10000, 
-               "Desc_Coal_C"       = -660,
-               #"Desc_RawQuartz_C"  = -10000,
-               "Desc_OreIron_C"    = -720, 
-               "Desc_OreCopper_C"  = -210,
-               #"Desc_OreGold_C"    = -10000,
-               "Desc_Stone_C"      = -240,
-               #"Desc_Sulfur_C"     = -10000,
-               #"Desc_OreUranium_C" = -300,
+             c("Desc_Coal_C"       = -120,
+              # "Desc_RawQuartz_C"  = -120,
+               "Desc_OreIron_C"    = -120, 
+              # "Desc_NitrogenGas_C" = -5000,
+              # "Desc_LiquidOil_C"  = -5000,
+               "Desc_OreCopper_C"  = -60,
+               #"Desc_OreGold_C"    = -5000,
+               "Desc_Stone_C"      = -60,
+              # "Desc_Sulfur_C"     = -5000,
+              # "Desc_OreUranium_C" = -5000,
                "Desc_Water_C"      = -9007199254740991)), # -9007199254740991 is the total amount of available water on the map. Change if 
                                                           # water is limiting and you have a better idea about how much you can access
   
@@ -182,10 +191,10 @@ tar_plan(
              factory_binary_search_continuous(Opt_products,                     # DON'T CHANGE THIS
                                               current_recipes,                  # DON'T CHANGE THIS
                                               available_resources,              # DON'T CHANGE THIS
-                                              req_amt = tier_3_building_qty,    # How much of each product is required. Same order as Opt_products list
-                                             # max_rate = 1,                    # Starting upper bound for the the search space of production rates
-                                              whole_number_factories = FALSE,   # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
-                                              slack = FALSE)),                  # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
+                                              req_amt = c(1000, 100),       # How much of each product is required. Same order as Opt_products list
+                                              #max_rate = 1,                    # Starting upper bound for the the search space of production rates
+                                              whole_number_factories = F,       # Do you want a solution with integer factories (do you not want to worry about under clocking factories)
+                                              slack = T)),                   # Likely, you will produce extra intermediate components if this is set to TRUE. Under clocking is so easy to do now
                                                                                 # though that it's probably best to keep this to FALSE, just remember not to panic when a result tells you to make 
                                                                                 # 1/8th of a factory or something
                                                                                 # If slack = FALSE, the solution will try to find a factory that makes products in exactly the rate ratios you indicate
@@ -218,6 +227,17 @@ tar_plan(
                                      recipeGraph = current_recipes$graph, 
                                      products    = Opt_products)),
   
+  # 1. Run 'RCy3::createNetworkFromIgraph(tar_read(CytoscapeReady_factoryCounts)$full_graph)'
+  #    or 'RCy3::createNetworkFromIgraph(tar_read(CytoscapeReady_factoryCounts)$group_graph)'
+  # NOTE: There's an error with this right now where if an intermediate is also
+  # requested as a product, the label will be incorrect and other downstream
+  # outflows will need to be subtracted from the indicated rate/building quantity
+  # to be accurate
+  tar_target(CytoscapeReady_factoryCounts, 
+             tidy_factory_results(CytoscapeReady_binary,
+                                  current_recipes,
+                                  Opt_products)),
+  
   ## Section: Targets for testing stuff
   ##################################################
   tar_target(current_recipe_matrix, 
@@ -230,5 +250,13 @@ tar_plan(
   tar_target(resource_consumption,
              find_limiting_resource(current_recipe_matrix,
                                     binary_LP_result$soln,
-                                    available_resources))
+                                    available_resources)),
+  
+  # Plot of current solution rates
+  tar_target(rate_plot,
+             make_rate_plot(binary_LP_result)),
+
+  # COunt of factories by type for current solution
+  tar_target(factory_count,
+             count_factories(CytoscapeReady_binary))
 )

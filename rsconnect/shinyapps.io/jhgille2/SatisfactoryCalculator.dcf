@@ -1,0 +1,12 @@
+name: SatisfactoryCalculator
+title: SatisfactoryCalculator
+username: jhgille2
+account: jhgille2
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16733332
+bundleId: 11614440
+url: https://jhgille2.shinyapps.io/SatisfactoryCalculator/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

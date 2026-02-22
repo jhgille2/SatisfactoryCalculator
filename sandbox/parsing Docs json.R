@@ -13,12 +13,12 @@ tar_load(RecipeData)
 
 
 # Read in docs.json
-docs_json <- jsonlite::fromJSON(readLines(here::here("data", "recipe_jsons", "Docs_utf8.json"),
+docs_json <- jsonlite::fromJSON(readLines(here::here("data", "recipe_jsons", "en-US_utf8.json"),
                                                skipNul = T,
                                                encoding = "UTF-16LE"))
 
 # Get the recipe data
-recipe_df <- docs_json$Classes[[6]]
+recipe_df <- docs_json$Classes[[7]]
 
 
 # Need a function to parse the ingredients/products content
